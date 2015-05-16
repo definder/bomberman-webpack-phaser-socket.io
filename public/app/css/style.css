@@ -1,0 +1,197 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#arena{
+    display:flex;
+}
+#phaserGame{
+    margin-left:auto;
+    margin-right:auto;
+}
+#wrapper{
+    background-color: #9b9291;
+    margin-right: 10%;
+    margin-left: 10%;
+    min-height: 576px;
+}
+body{
+    height: 100%;
+}
+#content{
+    width: 100%;
+    height: 450px;
+    position: relative;
+}
+.top_content{
+    height: 86%;
+}
+.bottom_content{
+    height: 14%;
+}
+#footer{
+    display: block;
+    width: 100%;
+    height: 126px;
+    background-color: #918887;
+    color: #ffffff;
+    position: relative;
+}
+.name{
+    width: 100%;
+    height: 25%;
+    text-align: center;
+}
+.slots{
+    width: 100%;
+    height: 75%;
+}
+.slot_1{
+    float: left;
+    height: 100%;
+    width: 25%;
+}
+.slot_2{
+    float: left;
+    height: 100%;
+    width: 25%;
+}
+.slot_3{
+    float: left;
+    height: 100%;
+    width: 25%;
+}
+.slot_4{
+    float: left;
+    height: 100%;
+    width: 25%;
+}
+
+.button {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 80%;
+    line-height: 80px;
+    color: white;
+    text-decoration: none;
+    font-size: 30px;
+    font-family: helvetica, arial;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    position: relative;
+
+    /* BORDER RADIUS */
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 5px;
+
+    /* TEXT SHADOW */
+
+    text-shadow: 1px 1px 1px black;
+
+    /* BOX SHADOW */
+    -moz-box-shadow: 0 1px 3px black;
+    -webkit-box-shadow: 0 1px 3px black;
+    box-shadow: 0 1px 3px black;
+}
+
+/* WHILE BEING CLICKED */
+.button:active {
+    -moz-box-shadow: 0 2px 6px black;
+    -webkit-box-shadow: 0 2px 6px black;
+}
+/* FONT GLYPH (MOSTLY FOR FUN) */
+.slot_1 .button{
+    border: 1px solid #e5e5e5;
+    background: -moz-linear-gradient(top, #e5e5e5, #c6c6c6 50%, #afafaf 51%, #979797);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #e5e5e5), color-stop(.5, #c6c6c6), color-stop(.5, #afafaf), to(#979797));
+}
+.slot_1 .button:hover {
+    background: #014464;
+    background: -moz-linear-gradient(top, #d0d0d0, #b5b5b5 50%, #979797 51%, #7e7e7e);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d0d0d0), color-stop(.5, #b5b5b5), color-stop(.51, #979797), to(#7e7e7e));
+}
+.slot_2 .button{
+    border: 1px solid #c5a5d0;
+    background: -moz-linear-gradient(top, #c5a5d0, #b091bb 50%, #a487af 51%, #90729b);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c5a5d0), color-stop(.5, #b091bb), color-stop(.5, #a487af), to(#90729b));
+}
+.slot_2 .button:hover {
+    background: #014464;
+    background: -moz-linear-gradient(top, #b391be, #997aa4 50%, #896f94 51%, #7c6487);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b391be), color-stop(.5, #997aa4), color-stop(.51, #896f94), to(#7c6487));
+}
+.slot_3 .button{
+    border: 1px solid #8a86e5;
+    background: -moz-linear-gradient(top, #8a86e5, #7a76d1 50%, #6d69c4 51%, #5e5cb1);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #8a86e5), color-stop(.5, #7a76d1), color-stop(.5, #6d69c4), to(#5e5cb1));
+}
+.slot_3 .button:hover {
+    background: #014464;
+    background: -moz-linear-gradient(top, #716fc9, #6462bc 50%, #5756ac 51%, #4c4c98);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #716fc9), color-stop(.5, #6462bc), color-stop(.51, #5756ac), to(#4c4c98));
+}
+.slot_4 .button{
+    border: 1px solid #ea4a44;
+    background: -moz-linear-gradient(top, #ea4a44, #d24640 50%, #c8453f 51%, #b9433d);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ea4a44), color-stop(.5, #d24640), color-stop(.51, #c8453f), to(#b9433d));
+}
+.slot_4 .button:hover {
+    background: #014464;
+    background: -moz-linear-gradient(top, #cf4943, #c34943 50%, #a94640 51%, #94433d);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cf4943), color-stop(.5, #c34943), color-stop(.51, #a94640), to(#94433d));
+}
+.slot_1 .button:before{
+    content: '1';
+}
+.slot_2 .button:before{
+    content: '2';
+}
+.slot_3 .button:before{
+    content: '3';
+}
+.slot_4 .button:before{
+    content: '4';
+}
+.button:before {
+    font-family: "Comfortaa", "Fedra Sans", "FF Kava";
+    color: #343434;
+    font-size: 60px;
+    float: left;
+    margin-left: 20px;
+    margin-right: -20px;
+    text-shadow: 0 1px 0 #ffffff;
+}
+.start{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.start .button{
+    line-height: 40px!important;
+    border: 1px solid #e5e5e5;
+    background: -moz-linear-gradient(top, #e5e5e5, #c6c6c6 50%, #afafaf 51%, #979797);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #e5e5e5), color-stop(.5, #c6c6c6), color-stop(.5, #afafaf), to(#979797));
+}
+.start .button:hover {
+    background: #014464;
+    background: -moz-linear-gradient(top, #d0d0d0, #b5b5b5 50%, #979797 51%, #7e7e7e);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d0d0d0), color-stop(.5, #b5b5b5), color-stop(.51, #979797), to(#7e7e7e));
+}
+.img{
+    width: 500px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 50px;
+
+}
+.img img{
+    width: 500px;
+    height: 300px;
+    border-radius: 20px;
+    border: 5px solid #ffffff;
+}
