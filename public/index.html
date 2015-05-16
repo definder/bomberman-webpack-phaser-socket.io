@@ -5,6 +5,7 @@
     <title>Super Bomberman</title>
     <link rel="stylesheet" href="app/css/style.css"/>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="app/lib/jquery-1.11.3.min.js"></script>
     <script src="index.js"></script>
 </head>
 <body>
@@ -20,10 +21,16 @@
                 <button  class="button" onclick="window.location='/game';"> Start</button>
             </div>
         </div>
+        <div class="information">
+
+        </div>
     </div>
     <div id="footer">
         <div class="name">
             <h2>Select slot:</h2>
+            <div class="info">
+                <button  class="button-info">Information</button>
+            </div>
         </div>
         <div class="slots">
             <div class="slot_1">

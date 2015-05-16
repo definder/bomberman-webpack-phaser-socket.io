@@ -195,3 +195,52 @@ body{
     border-radius: 20px;
     border: 5px solid #ffffff;
 }
+.information{
+    display: none;
+    width: 200px;
+    height: 300px;
+    left: 650px;
+    top: 100px;
+    border-radius: 20px;
+    position: absolute;
+    background-color: #bdbdb6;
+    box-shadow: 0 0 10px #fff;
+}
+.name h2{
+    float: left;
+    width: 85%;
+}
+.name .info{
+    float: left;
+    height: 30px;
+    width: 135px;
+}
+.button-info{
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    height: 90%;
+    cursor: pointer;
+    color: #606059;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: helvetica, arial;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    position: relative;
+
+    /* BORDER RADIUS */
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 5px;
+
+    /* TEXT SHADOW */
+
+
+    /* BOX SHADOW */
+    -moz-box-shadow: 0 1px 3px black;
+    -webkit-box-shadow: 0 1px 3px black;
+    box-shadow: 0 1px 3px black;
+}
