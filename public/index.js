@@ -10,11 +10,20 @@ $(document).ready(function() {
             $(this).addClass('active');
         }
     });
+    $('.slot_1').click(function(){
+        socket.emit('add to lobby', { my: 'data' });
+    });
+    $('.slot_2').click(function(){
+        socket.emit('add to lobby', { my: 'data' });
+    });
+    socket.on('you enter lobby', function(data){
+       alert(data.you);
+    });
 });
-/* Style start */
+/* Style end */
 
 var socket = io.connect('http://localhost:3000');
-socket.on('news', function (data) {
+socket.on('eventClient', function (data) {
     console.log(data);
-    socket.emit('my other event', { my: 'data' });
 });
+socket.emit('eventServer', { data: 'Hello Server' });

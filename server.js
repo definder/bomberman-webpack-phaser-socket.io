@@ -4,8 +4,13 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
     port = 3000,
-    fs = require('fs');
+    fs = require('fs'),
+    logger = require('socket.io-logger')();
 server.listen(port);
+var stream = fs.createWriteStream('./events.log', {flags:'a'});
+logger.stream(stream);
+io.use(logger);
+
 
 app.use(express.static(path.join( __dirname, 'public')));
 
@@ -20,6 +25,10 @@ app.get('/game', function (req, res) {
     })
 });
 
+var Player = require('./entity/player');
+
+var games = {};
+
 init();
 
 function init(){
@@ -28,11 +37,22 @@ function init(){
 function setEvent(){
     io.on('connection', function(socket){
         console.info("New player has connected: "+socket.id);
-        socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
+        socket.on('eventServer', function (data) {
             console.log(data);
+            socket.emit('eventClient', { data: 'Hello Client' });
+        });
+        socket.emit('eventClient', { data: 'Hello Client' });
+        socket.on('disconnect', function () {
+            console.log('user disconnected');
         });
     });
 }
 
+var lobbySlots =[];
 
+var Lobby = {
+    onEnterLobby: function(data){
+        this.join('lobby');
+        socket.in('lobby').emit('you enter lobby', {you: 'ENTER'});
+    }
+};
