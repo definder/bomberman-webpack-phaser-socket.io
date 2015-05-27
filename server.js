@@ -4,12 +4,8 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
     port = 3000,
-    fs = require('fs'),
-    logger = require('socket.io-logger')();
+    fs = require('fs');
 server.listen(port);
-var stream = fs.createWriteStream('./events.log', {flags:'a'});
-logger.stream(stream);
-io.use(logger);
 
 
 app.use(express.static(path.join( __dirname, 'public')));
@@ -25,8 +21,11 @@ app.get('/game', function (req, res) {
     })
 });
 
-var Player = require('./entity/player');
-
+var PendingGame = require('./pending_game');
+var Game = require('./entity/game');
+var pendingGame = new PendingGame();
+var isGame = false;
+var statGame = null;
 var games = {};
 
 init();
@@ -36,23 +35,31 @@ function init(){
 }
 function setEvent(){
     io.on('connection', function(socket){
-        console.info("New player has connected: "+socket.id);
-        socket.on('eventServer', function (data) {
-            console.log(data);
-            socket.emit('eventClient', { data: 'Hello Client' });
+        console.info("New player has connected: "+socket.id+"/"+socket.handshake.address);
+        socket.on('add to lobby', onEnterLobby);
+        socket.on('view stat', function(){
+            if(statGame == null){
+                statGame = setInterval(function(){
+                    information();
+                },1000);
+            }
         });
-        socket.emit('eventClient', { data: 'Hello Client' });
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
+        socket.on('view stat concel', function(){
+            clearInterval(statGame);
         });
     });
 }
-
+function onEnterLobby(data){
+    if(pendingGame.addPlayer(this.id,data.slot)){
+        this.join(pendingGame.getGameID());
+        io.to(pendingGame.getGameID()).emit('you enter lobby', {slot: pendingGame.getPlayerToID(this.id).slot});
+    }
+}
+function information(){
+    io.emit('information', {counts: pendingGame.getCountPlayers(), slots:pendingGame.getOccupiedSlots()});
+}
 var lobbySlots =[];
 
 var Lobby = {
-    onEnterLobby: function(data){
-        this.join('lobby');
-        socket.in('lobby').emit('you enter lobby', {you: 'ENTER'});
-    }
+
 };

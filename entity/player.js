@@ -1,4 +1,4 @@
-var Player = function(xSpawn, ySpawn, facing, id, color){
+var Player = function(xSpawn, ySpawn, facing, id, color,slot){
     this.xSpawn = xSpawn;
     this.ySpawn = ySpawn;
     this.x = xSpawn;
@@ -7,6 +7,7 @@ var Player = function(xSpawn, ySpawn, facing, id, color){
     this.id = id;
     this.color = color;
     this.wins = 0;
+    this.slot = slot;
 };
 
 module.exports = Player;
