@@ -2,9 +2,6 @@
     margin: 0;
     padding: 0;
 }
-#arena{
-    display:flex;
-}
 #phaserGame{
     margin-left:auto;
     margin-right:auto;
@@ -309,4 +306,7 @@ body{
 }
 .display-none{
     display: none;
+}
+.display-block{
+    display: block;
 }

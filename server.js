@@ -23,10 +23,18 @@ app.get('/game', function (req, res) {
 
 var PendingGame = require('./pending_game');
 var Game = require('./entity/game');
+var Maps = require('./entity/maps');
 var pendingGame = new PendingGame();
 var isGame = false;
 var statGame = null;
 var games = {};
+
+
+var BLOCK_SIZE = 32;
+var WIDTH = 800;
+var HEIGHT = 576;
+
+
 
 init();
 
@@ -44,8 +52,11 @@ function setEvent(){
                 },1000);
             }
         });
-        socket.on('view stat concel', function(){
-            clearInterval(statGame);
+        socket.on('start game', onStartGame);
+        socket.on('move player', onMovePlayer);
+        socket.on('start arena', function(){
+            io.to(pendingGame.getGameID()).emit('start_arena');
+            console.log('START');
         });
     });
 }
@@ -55,10 +66,18 @@ function onEnterLobby(data){
         io.to(pendingGame.getGameID()).emit('you enter lobby', {slot: pendingGame.getPlayerToID(this.id).slot});
     }
 }
+function onStartGame(){
+    clearInterval(statGame);
+    Maps.create(Math.round(WIDTH / BLOCK_SIZE),Math.round(HEIGHT / BLOCK_SIZE));
+    Maps.generate();
+    io.to(pendingGame.getGameID()).emit('start game', {players: pendingGame.players, id: this.id, maps: Maps});
+}
+function onMovePlayer(data){
+    io.to(pendingGame.getGameID()).emit('move player', {x: data.x, y: data.y, facing: data.facing});
+}
 function information(){
     io.emit('information', {counts: pendingGame.getCountPlayers(), slots:pendingGame.getOccupiedSlots()});
 }
-var lobbySlots =[];
 
 var Lobby = {
 

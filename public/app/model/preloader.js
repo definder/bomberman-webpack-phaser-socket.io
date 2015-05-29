@@ -17,6 +17,9 @@ Preloader.prototype = {
         game.load.image('game_slot','./app/resource/game_slot.png');
     },
     create: function(){
-        game.state.start('Arena');
+        socket.emit('start game');
+        socket.on('start game', function(data){
+            game.state.start('Arena',true, false, data.players, data.id, data.maps);
+        });
     }
 };

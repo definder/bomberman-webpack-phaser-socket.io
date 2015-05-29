@@ -44,15 +44,17 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	window.socket = null;
+	var socket = io.connect();
 	var BLOCK_SIZE = 32;
 	var WIDTH = 800;
 	var HEIGHT = 576;
 	window.game = new Phaser.Game(WIDTH,HEIGHT,Phaser.CANVAS, 'phaserGame');
 
-	startGame();
+	socket.on('start_arena',startGame());
 
 	function startGame(){
-
+	    console.log('START ARENAAAAA');
 	    game.state.add('Preload',__webpack_require__(1));
 	    game.state.add('Arena',__webpack_require__(2));
 	    game.state.start('Preload');
@@ -64,6 +66,72 @@
 
 	    game.state.start('Boot');*/
 	}
+
+	/* Style start */
+	$(document).ready(function() {
+	    var infoBlock = document.getElementById('information');
+	    infoBlock.innerHTML = '<h4 style="text-align: center">Welcome to the game Bomberman!</h4><br>';
+	    $('.button-info').click(function () {
+	        if ($(this).hasClass('active')) {
+	            $('#information').css({'display': 'none'});
+	            $(this).removeClass('active');
+	        }
+	        else {
+	            $('#information').css({'display': 'block'});
+	            $(this).addClass('active');
+	        }
+	    });
+	    $('#start-game').click(function(){
+	        if($('#body').hasClass('display-block')){
+	            $('#body').removeClass('display-block');
+	            $('#body').addClass('display-none');
+	        }
+	        if($('#arena').hasClass('display-none')){
+	            $('#arena').removeClass('display-none');
+	        }
+	        socket.emit('start_arena');
+	    });
+	    $('.slot_1 a').click(function(){
+	        socket.emit('add to lobby', { slot: 1 });
+	    });
+	    $('.slot_2 a').click(function(){
+	        socket.emit('add to lobby', { slot: 2 });
+	    });
+	    $('.slot_3 a').click(function(){
+	        socket.emit('add to lobby', { slot: 3 });
+	    });
+	    $('.slot_4 a').click(function(){
+	        socket.emit('add to lobby', { slot: 4 });
+	    });
+	});
+	/* Style end */
+
+	socket.emit('view stat');
+
+	socket.on('you enter lobby', function(data){
+	    $('.slot_'+data.slot+' a').addClass('display-none');
+	    $('.slot_'+data.slot+' .ico_'+data.slot).addClass('display-flex');
+	    var infoBlock = document.getElementById('information');
+	    var text = '<p>Slot '+data.slot+' - redy to Play!!</p><br>';
+	    infoBlock.innerHTML += text;
+	});
+
+	socket.on('information', function(data) {
+	    var infoBlock = document.getElementById('information');
+	    var text = '';
+	    if(data.counts != 0){
+	        for(var i = 0; i < data.counts; i++){
+	            if(!$('.slot_'+data.slots[i]+' a').hasClass('display-none')){
+	                text = '<p>Slot '+data.slots[i]+' - redy to Play!!</p><br>';
+	                $('.slot_'+data.slots[i]+' a').addClass('display-none');
+	            }
+	            if(!$('.slot_'+data.slots[i]+' .ico_'+data.slots[i]).hasClass('display-flex')){
+	                $('.slot_'+data.slots[i]+' .ico_'+data.slots[i]).addClass('display-flex');
+	            }
+	        }
+	    }
+	    infoBlock.innerHTML += text;
+	});
 
 /***/ },
 /* 1 */
@@ -88,7 +156,10 @@
 	        game.load.image('game_slot','./app/resource/game_slot.png');
 	    },
 	    create: function(){
-	        game.state.start('Arena');
+	        socket.emit('start game');
+	        socket.on('start game', function(data){
+	            game.state.start('Arena',true, false, data.players, data.id, data.maps);
+	        });
 	    }
 	};
 
@@ -97,174 +168,84 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Maps = __webpack_require__(3);
-	var Player = __webpack_require__(4);
+	var Player = __webpack_require__(3);
+	var RemotePlayer = __webpack_require__(4);
 	var Arena = function(){};
 
 	module.exports = Arena;
-
-
-	var BLOCK_SIZE = 32;
-	var WIDTH = 800;
-	var HEIGHT = 576;
-
-
-	Maps.create(Math.round(WIDTH / BLOCK_SIZE),Math.round(HEIGHT / BLOCK_SIZE));
-	Maps.generate();
-	//Maps.print();
-	console.log(Math.round(game.height)+'x'+Math.round(game.width));
-	var map = Maps.getMap();
 
 	Arena.prototype = {
 	    gmap: null,
 	    spaceButton: null,
 	    gameFrozen: false,
+	    player: {},
+	    remotePlayers: {},
+	    init: function(players, id, map){
+	        this.players = players;
+	        this.playerID = id;
+	        this.maps = map;
+	    },
+	    setEventHandler: function(){
+	        socket.on('move player', this.onMovePlayer());
+	    },
 	    create: function(){
 	        game.physics.startSystem(Phaser.Physics.ARCADE);
 	        gmap = game.add.tilemap();
 	        gmap.addTilesetImage('grass', 'grass', 32, 32, null, null, 0);
 	        gmap.addTilesetImage('finalBlock', 'finalBlock', 32, 32, null, null, 1);
 	        gmap.addTilesetImage('expBlock', 'expBlock', 32, 32, null, null, 2);
-	        layer = gmap.create('layer',Maps.getWidth(),Maps.getHeight(),32,32);
+	        layer = gmap.create('layer',this.maps.getWidth(),this.maps.getHeight(),32,32);
 	        layer.resizeWorld();
 	        gmap.setCollision([1,2]);
-	        for(var i=0; i < Maps.getWidth(); i++){
-	            for(var j = 0; j < Maps.getHeight(); j++){
-	                gmap.putTile(map[i][j],i,j,layer);
+	        this.setEventHandler();
+	        for(var i=0; i < this.maps.getWidth(); i++){
+	            for(var j = 0; j < this.maps.getHeight(); j++){
+	                gmap.putTile(this.maps[i][j],i,j,layer);
 	            }
 	        }
 	        this.initializePlayers();
 	    },
 	    update: function() {
-	        if(player != null){
+	        if(this.player != null){
 	            if(this.gameFrozen){
-	                player.freeze();
+	                this.player.freeze();
 	            }
 	            else{
-	                player.handleInput();
+	                this.player.handleInput();
 	            }
+	        }
+	        for(var i in this.remotePlayers){
+	            this.remotePlayers[i].interpolate();
 	        }
 	    },
 	    initializePlayers: function(){
-	        player = new Player(32,64,0,'purple');
+	        for(var i in this.players){
+	            var data = this.players[i];
+	                if(data.id == this.playerID){
+	                    this.player = new Player(data.x,data.y,data.facing,data.color);
+	                }
+	                else{
+	                    this.remotePlayers[data.id] = new RemotePlayer(data.x,data.y,data.facing,data.color);
+	                }
+	        }
+
+	    },
+	    onMovePlayer: function(data){
+	        if(this.player && this.playerID == data.id){
+	            return;
+	        }
+	        var movePlayer = this.remotePlayers[data.id];
+	        if(movePlayer.x == data.x && movePlayer.y == data.y){
+	            return;
+	        }
+	        movePlayer.animations.play(movePlayer.facing);
+	        movePlayer.previousPosition = {x: movePlayer.x, y: movePlayer.y};
 	    }
 	};
 
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Maps = {
-	    map: null,
-	    map_size_height: null,
-	    map_size_width: null,
-	    rooms: [],
-	    stats: null,
-	    tree: [],
-	    stack: [],
-	    gid: 1,
-	    minRoomSize: 5,
-	    minSizeFactor: 0.3,
-
-	    clear: function(){
-	        this.map = [];
-	        this.map_size_height = null;
-	        this.map_size_width = null;
-	        this.rooms = [];
-	        this.stats = {};
-	        this.tree = [];
-	        this.stack = [];
-	        this.gid = 1;
-	    },
-	    create: function(width,height){
-	        this.clear();
-	        this.map_size_height = height;
-	        this.map_size_width = width;
-	        for (var x = 0; x < this.map_size_width; x++) {
-	            this.map[x] = [];
-	            for (var y = 0; y < this.map_size_height; y++) {
-	                this.map[x][y] = 0;
-	            }
-	        }
-	        for(var x = 0; x < this.map_size_width; x++){
-	            for (var y = 0; y < this.map_size_height; y++) {
-	                if((x == 0 || x == this.map_size_width-1)||(y == 0 || y == this.map_size_height-1)){
-	                    this.map[x][y] = 1;
-	                }
-	            }
-	        }
-	    },
-	    generate: function(){
-	        var randArray = [];
-	        for (var x = 1; x < this.map_size_width-1; x++) {
-	            for(var r = 0; r < this.map_size_width-7; r++){
-	                randArray[r] = Math.round(Math.random()*(this.map_size_width-2)+1);
-	            }
-	            for (var y = 1; y < this.map_size_height-1; y++) {
-	                if(isArray(randArray,y)){
-	                    this.map[x][y] = 2;
-	                }
-	            }
-	        }
-	        this.map[1][1] = 0;
-	        this.map[1][2] = 0;
-	        this.map[2][1] = 0;
-	        this.map[23][1] = 0;
-	        this.map[22][1] = 0;
-	        this.map[23][2] = 0;
-	        this.map[1][16] = 0;
-	        this.map[1][15] = 0;
-	        this.map[2][16] = 0;
-	        this.map[23][16] = 0;
-	        this.map[22][16] = 0;
-	        this.map[23][15] = 0;
-	    },
-	    print: function(){
-	        console.log('BOMDERMAN');
-	        console.log(this.map_size_width+'x'+this.map_size_height);
-	        for(var x = 0; x < this.map_size_width; x++){
-	            var row = x;
-	            if(x < 10){
-	                row+='  ';
-	            }
-	            else{
-	                row+= ' ';
-	            }
-	            for(var y = 0; y < this.map_size_height; y++){
-	                row += this.map[x][y] + ' ';
-	            }
-	            console.debug(row);
-	        }
-	    },
-	    getMap: function(){
-	        return this.map;
-	    },
-	    getWidth: function(){
-	        return this.map_size_width;
-	    },
-	    getHeight: function(){
-	        return this.map_size_height;
-	    },
-	    setMap: function(){
-	        this.map[5][5] = 2;
-	    }
-	};
-	function isArray (array, value){
-	    for(var i = 0; i < array.length; i++){
-	        if(array[i] == value){
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-
-	module.exports = Maps;
-
-
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var DEFAULT_SPEED = 150;
@@ -319,6 +300,7 @@
 	    }
 	    if(moving){
 	        this.animations.play(this.facing);
+	        socket.emit("move player", {x: this.position.x, y: this.position.y, facing: this.facing});
 	    }
 	};
 
@@ -333,6 +315,32 @@
 	};
 
 	module.exports = Player;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var RemotePlayer = function(x, y, id, color){
+	    this.id = id;
+	    this.previousPosition = {x: x, y: y};
+	    Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
+	    game.physics.enable(this, Phaser.Physics.ARCADE);
+	    this.anchor.setTo(0.1,0.6);
+	    this.body.setSize(20, 19, 5, 16);
+	    this.animations.add('up', [0,1,2,3,4,5,6,7], 15, true);
+	    this.animations.add('down', [8,9,10,11,12,13,14,15], 15, true);
+	    this.animations.add('right', [16,17,18,19,20,21,22,23], 15, true);
+	    this.animations.add('left', [24,25,26,27,28,29,30,31], 15, true);
+	    game.add.existing(this);
+	};
+
+	RemotePlayer.prototype = Object.create(Phaser.Sprite.prototype);
+
+	RemotePlayer.prototype.interpolate = function(){
+	    this.position.x = this.previousPosition.x;
+	    this.position.y = this.previousPosition.y;
+	};
 
 
 /***/ }

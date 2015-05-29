@@ -6,55 +6,59 @@
     <link rel="stylesheet" href="app/css/style.css"/>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app/lib/jquery-1.11.3.min.js"></script>
+    <script src="app/lib/phaser.min.js"></script>
 </head>
 <body>
-<script src="index.js"></script>
+<script src="bundle.js"></script>
 <div id="wrapper">
-    <div id="content">
-        <div class="top_content">
-            <div class="img">
-                <img src="app/resource/img.jpg" alt="image"/>
+    <div id="arena" class="display-none"><div id="phaserGame"></div></div>
+    <div id="body" class="display-block">
+        <div id="content">
+            <div class="top_content">
+                <div class="img">
+                    <img src="app/resource/img.jpg" alt="image"/>
+                </div>
             </div>
-        </div>
-        <div class="bottom_content">
-            <div class="start">
-                <button  class="button" onclick="window.location='/game';"> Start</button>
+            <div class="bottom_content">
+                <div class="start">
+                    <button  class="button" onclick="window.location='#';" id="start-game"> Start</button>
+                </div>
             </div>
-        </div>
-        <div id="information">
+            <div id="information">
 
-        </div>
-    </div>
-    <div id="footer">
-        <div class="name">
-            <h2>Select slot:</h2>
-            <div class="info">
-                <button  class="button-info">Information</button>
             </div>
         </div>
-        <div class="slots">
-            <div class="slot_1">
-                <a href="#" class="button"> Slot </a>
-                <div class="ico_1">
-                    <img src="app/resource/icon_white.png" alt="White"/>
+        <div id="footer">
+            <div class="name">
+                <h2>Select slot:</h2>
+                <div class="info">
+                    <button  class="button-info">Information</button>
                 </div>
             </div>
-            <div class="slot_2">
-                <a href="#" class="button"> Slot </a>
-                <div class="ico_2">
-                    <img src="app/resource/icon_purple.png" alt="Purple"/>
+            <div class="slots">
+                <div class="slot_1">
+                    <a href="#" class="button"> Slot </a>
+                    <div class="ico_1">
+                        <img src="app/resource/icon_white.png" alt="White"/>
+                    </div>
                 </div>
-            </div>
-            <div class="slot_3">
-                <a href="#" class="button"> Slot </a>
-                <div class="ico_3">
-                    <img src="app/resource/icon_green.png" alt="Green"/>
+                <div class="slot_2">
+                    <a href="#" class="button"> Slot </a>
+                    <div class="ico_2">
+                        <img src="app/resource/icon_purple.png" alt="Purple"/>
+                    </div>
                 </div>
-            </div>
-            <div class="slot_4">
-                <a href="#" class="button"> Slot </a>
-                <div class="ico_4">
-                    <img src="app/resource/icon_yellow.png" alt="Yellow"/>
+                <div class="slot_3">
+                    <a href="#" class="button"> Slot </a>
+                    <div class="ico_3">
+                        <img src="app/resource/icon_green.png" alt="Green"/>
+                    </div>
+                </div>
+                <div class="slot_4">
+                    <a href="#" class="button"> Slot </a>
+                    <div class="ico_4">
+                        <img src="app/resource/icon_yellow.png" alt="Yellow"/>
+                    </div>
                 </div>
             </div>
         </div>

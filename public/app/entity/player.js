@@ -50,6 +50,7 @@ Player.prototype.handleMotionInput = function(){
     }
     if(moving){
         this.animations.play(this.facing);
+        socket.emit("move player", {x: this.position.x, y: this.position.y, facing: this.facing});
     }
 };
 
