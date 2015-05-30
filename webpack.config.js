@@ -2,10 +2,10 @@ var webpack = require("webpack");
 var path = require("path");
 
 module.exports = {
-    entry: "./public/app/main.js",
+    entry: "./public/src/main.js",
     resolve: {
         modulesDirectories: [
-            "./public/app/"
+            "./public/src/"
         ]
     },
     output: {

@@ -1,68 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Super Bomberman</title>
-    <link rel="stylesheet" href="app/css/style.css"/>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="app/lib/jquery-1.11.3.min.js"></script>
-    <script src="app/lib/phaser.min.js"></script>
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Bomb Arena</title>
+    <script type="text/javascript">
+        WebFontConfig = {
+          google: { families: [ 'Carter+One::latin' ] }
+        };
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http' ) +
+              '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); 
+    </script>
+    <script src="src/lib/phaser.js"></script>
+    <script src="app/lib/socket.io.js"></script>
+    <script src="bundle.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-<script src="bundle.js"></script>
-<div id="wrapper">
-    <div id="arena" class="display-none"><div id="phaserGame"></div></div>
-    <div id="body" class="display-block">
-        <div id="content">
-            <div class="top_content">
-                <div class="img">
-                    <img src="app/resource/img.jpg" alt="image"/>
-                </div>
-            </div>
-            <div class="bottom_content">
-                <div class="start">
-                    <button  class="button" onclick="window.location='#';" id="start-game"> Start</button>
-                </div>
-            </div>
-            <div id="information">
-
-            </div>
-        </div>
-        <div id="footer">
-            <div class="name">
-                <h2>Select slot:</h2>
-                <div class="info">
-                    <button  class="button-info">Information</button>
-                </div>
-            </div>
-            <div class="slots">
-                <div class="slot_1">
-                    <a href="#" class="button"> Slot </a>
-                    <div class="ico_1">
-                        <img src="app/resource/icon_white.png" alt="White"/>
-                    </div>
-                </div>
-                <div class="slot_2">
-                    <a href="#" class="button"> Slot </a>
-                    <div class="ico_2">
-                        <img src="app/resource/icon_purple.png" alt="Purple"/>
-                    </div>
-                </div>
-                <div class="slot_3">
-                    <a href="#" class="button"> Slot </a>
-                    <div class="ico_3">
-                        <img src="app/resource/icon_green.png" alt="Green"/>
-                    </div>
-                </div>
-                <div class="slot_4">
-                    <a href="#" class="button"> Slot </a>
-                    <div class="ico_4">
-                        <img src="app/resource/icon_yellow.png" alt="Yellow"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
