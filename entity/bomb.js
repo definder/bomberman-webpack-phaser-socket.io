@@ -60,7 +60,7 @@ Bomb.prototype = {
 			if(!player.alive) {
 				continue;
 			}
-			if(Math.floor((player.x - 6.5)/ TILE_SIZE) == Math.floor(x / TILE_SIZE)  && Math.floor((player.y + 7)/ TILE_SIZE) == Math.floor(y / TILE_SIZE)) {
+            if (Math.floor((player.x + 3) / TILE_SIZE) == Math.floor(x / TILE_SIZE) && Math.floor((player.y + 10) / TILE_SIZE) == Math.floor(y / TILE_SIZE)) {
 				explosionData.killedPlayers.push(player.id);
 			}
 		}

@@ -308,7 +308,6 @@ Level.prototype = {
         bomb.remove();
       }
     }, level);
-    console.info(data);
     data.destroyedTiles.forEach(function(destroyedTile) {
       this.map.removeTile(destroyedTile.col, destroyedTile.row, 1);
       if(destroyedTile.itemId) {

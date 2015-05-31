@@ -2,17 +2,17 @@ var TextConfigurer = require('../util/text_configurer');
 
 var screenWidth = game.width;
 
-var xOffset = 100 - screenWidth;
-var yOffset = 60;
+var xOffset = 230 - screenWidth;
+var yOffset = 20;
 
-var headerXOffset = 150 - screenWidth;
-var headerYOffset = 65;
+var headerXOffset = 280 - screenWidth;
+var headerYOffset = 25;
 
-var winnerPicXOffset = 225 - screenWidth;
-var winnerPicYOffset = 310;
+var winnerPicXOffset = 360 - screenWidth;
+var winnerPicYOffset = 270;
 
-var defaultTextXOffset = 220 - screenWidth;
-var defaultTextYOffset = 220;
+var defaultTextXOffset = 350 - screenWidth;
+var defaultTextYOffset = 180;
 
 var singleWinnerText = "Winner is...";
 var roundEndTieText = "Draw! Winners are...";

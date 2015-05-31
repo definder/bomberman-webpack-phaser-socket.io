@@ -1,19 +1,17 @@
 var Lobby = function() {};
 var TextConfigurer = require('../util/text_configurer');
 
-var initialSlotYOffset = 130;
-var slotXOffset = 40;
+var initialSlotYOffset = 350;
+var slotXOffset = 155;
 var lobbySlotDistance = 60;
 
 var textXOffset = 260;
 var textYOffset = 25;
-var repeatingBombTilesprite;
 
 module.exports = Lobby;
 
 Lobby.prototype = {
-	init: function(rbts) {
-		repeatingBombTilesprite = rbts;
+    init: function () {
 	},
 
 	create: function() {
@@ -49,14 +47,8 @@ Lobby.prototype = {
 				callback: null
 			}
 		};
-
-		if(repeatingBombTilesprite == null) {
-			repeatingBombTilesprite = game.add.tileSprite(0, 0, 608, 608, "repeating_bombs");
-		}
-
-		repeatingBombTilesprite.doNotDestroy = true;
-
-		this.backdrop = game.add.image(12.5, 12.5, "lobby_backdrop");
+        game.add.sprite(0, 0, 'background');
+        this.backdrop = game.add.image(130, 300, "background_b");
 
 		this.slots = [];
 		this.labels = [];
@@ -72,8 +64,6 @@ Lobby.prototype = {
 	},
 
 	update: function() {
-		repeatingBombTilesprite.tilePosition.x++;
-		repeatingBombTilesprite.tilePosition.y--;
 	},
 
 	addSlots: function(gameData) {
@@ -107,12 +97,12 @@ Lobby.prototype = {
 	hostGameAction: function(gameId) {
 		socket.emit("host game", {gameId: gameId});
 		socket.removeAllListeners();
-		game.state.start("StageSelect", true, false, gameId, repeatingBombTilesprite);
+        game.state.start("StageSelect", true, false, gameId);
 	},
 
 	joinGameAction: function(gameId) {
 		socket.removeAllListeners();
-		game.state.start("PendingGame", true, false, null, gameId, repeatingBombTilesprite);
+        game.state.start("PendingGame", true, false, null, gameId);
 	},
 
 	updateSlot: function(updateInfo) {

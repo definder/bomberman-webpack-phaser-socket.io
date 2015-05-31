@@ -52,7 +52,6 @@
 	startGame();
 
 	function startGame() {
-		//socket = io("https://limitless-brook-9339.herokuapp.com:443");
 	    socket = io();
 
 	    __webpack_require__(8);
@@ -133,7 +132,8 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Preloader = function () {};
+        var Preloader = function () {
+        };
 
 	module.exports = Preloader;
 
@@ -143,61 +143,62 @@
 
 	Preloader.prototype = {
 
-	  preload: function () {
-	    this.load.spritesheet("bomberman_white", "resource/bomberman.png", 32, 64);
-	    this.load.spritesheet("bomberman_black", "resource/bomberman_black.png", 32, 64);
-	    this.load.spritesheet("bomberman_blue", "resource/bomberman_blue.png", 32, 64);
-	    this.load.spritesheet("bomberman_red", "resource/bomberman_red.png", 32, 64);
-	    this.load.spritesheet("bomb", "resource/bomb.png", 35, 35);
-	    this.load.spritesheet("explosion_top", "resource/explosion_top.png", 30, 40);
-	    this.load.spritesheet("explosion_bottom", "resource/explosion_bottom.png", 30, 40);
-	    this.load.spritesheet("explosion_left", "resource/explosion_left.png", 40, 30);
-	    this.load.spritesheet("explosion_right", "resource/explosion_right.png", 40, 30);
-	    this.load.spritesheet("explosion_center", "resource/explosion_center.png", 30, 30);
-	    this.load.spritesheet("explosion_horizontal", "resource/explosion_horizontal.png", 40, 30);
-	    this.load.spritesheet("explosion_vertical", "resource/explosion_vertical.png", 30, 40);
-	    this.load.spritesheet("left_select_button", "resource/left_select_button.png", 60, 60);
-	    this.load.spritesheet("right_select_button", "resource/right_select_button.png", 60, 60);
-	    this.load.spritesheet("ok_button", "resource/ok_button.png", 60, 60);
-	    this.load.spritesheet("character_square", "resource/character_square.png", 89, 89);
-	    this.load.spritesheet("start_game_button", "resource/start_game_button.png", 202, 43);
-	    this.load.spritesheet("leave_game_button", "resource/leave_game_button.png", 202, 43);
-	    this.load.spritesheet("game_slot", "resource/game_slot.png", 522, 48);
+        preload: function () {
+            this.load.spritesheet("bomberman_white", "resource/bomberman.png", 32, 64);
+            this.load.spritesheet("bomberman_black", "resource/bomberman_black.png", 32, 64);
+            this.load.spritesheet("bomberman_blue", "resource/bomberman_blue.png", 32, 64);
+            this.load.spritesheet("bomberman_red", "resource/bomberman_red.png", 32, 64);
+            this.load.spritesheet("bomb", "resource/bomb.png", 35, 35);
+            this.load.spritesheet("explosion_top", "resource/explosion_top.png", 30, 40);
+            this.load.spritesheet("explosion_bottom", "resource/explosion_bottom.png", 30, 40);
+            this.load.spritesheet("explosion_left", "resource/explosion_left.png", 40, 30);
+            this.load.spritesheet("explosion_right", "resource/explosion_right.png", 40, 30);
+            this.load.spritesheet("explosion_center", "resource/explosion_center.png", 30, 30);
+            this.load.spritesheet("explosion_horizontal", "resource/explosion_horizontal.png", 40, 30);
+            this.load.spritesheet("explosion_vertical", "resource/explosion_vertical.png", 30, 40);
+            this.load.spritesheet("left_select_button", "resource/left_select_button.png", 60, 60);
+            this.load.spritesheet("right_select_button", "resource/right_select_button.png", 60, 60);
+            this.load.spritesheet("ok_button", "resource/ok_button.png", 60, 60);
+            this.load.spritesheet("character_square", "resource/character_square.png", 89, 89);
+            this.load.spritesheet("start_game_button", "resource/start_game_button.png", 202, 43);
+            this.load.spritesheet("leave_game_button", "resource/leave_game_button.png", 202, 43);
+            this.load.spritesheet("game_slot", "resource/game_slot.png", 522, 48);
+            this.load.tilemap("First", "assets/levels/Arena_map.json", null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap("levelTwo", "assets/levels/Arena_map.json", null, Phaser.Tilemap.TILED_JSON);
+            this.load.image("tiles", "resource/tileset.png");
+            this.load.image("select_stage", "resource/select_stage.png");
+            this.load.image("first_", "assets/levels/thumbnails/first_.png");
+            this.load.image("danger_desert_thumbnail", "assets/levels/thumbnails/danger_desert_thumbnail.png");
+            this.load.image("pending_game_backdrop", "resource/backdrop.png");
+            this.load.image("round_end_display", "resource/end_of_round_window.png");
+            this.load.image("repeating_bombs", "resource/repeating_bombs.png");
+            this.load.image("bomberman_head_white", "resource/icon_white.png");
+            this.load.image("bomberman_head_blue", "resource/icon_blue.png");
+            this.load.image("bomberman_head_green", "resource/icon_green.png");
+            this.load.image("bomberman_head_purple", "resource/bomberman_head_purple.png");
+            this.load.image("bomberman_head_red", "resource/bomberman_head_red.png");
+            this.load.image("bomberman_head_black", "resource/icon_black.png");
+            this.load.image("bomb_count_powerup", "resource/BombPowerup.png");
+            this.load.image("bomb_strength_powerup", "resource/FlamePowerup.png");
+            this.load.image("speed_powerup", "resource/SpeedPowerup.png");
+            this.load.image("bomb_count_notification", "resource/bomb_count_notification.png");
+            this.load.image("bomb_strength_notification", "resource/bomb_strength_notification.png");
+            this.load.image("speed_notification", "resource/speed_notification.png");
+            this.load.image("round_1", "resource/round_1.png");
+            this.load.image("round_2", "resource/round_2.png");
+            this.load.image("final_round", "resource/final_round.png");
+            this.load.image("tiebreaker", "resource/tiebreaker.png");
+            this.load.image("background", "resource/Background_1.png");
+            this.load.image("background_b", "resource/Background_button.png");
+            this.load.image("background_s", "resource/Background_select.png");
 
-	    this.load.tilemap("First", "assets/levels/Arena_map.json", null, Phaser.Tilemap.TILED_JSON);
-	    this.load.tilemap("levelTwo", "assets/levels/Arena_map.json", null, Phaser.Tilemap.TILED_JSON);
-	    this.load.image("tiles", "resource/tileset.png");
-	    this.load.image("select_stage", "resource/select_stage.png");
-	    this.load.image("limitless_brook_thumbnail", "assets/levels/thumbnails/limitless_brook_thumbnail.png");
-	    this.load.image("danger_desert_thumbnail", "assets/levels/thumbnails/danger_desert_thumbnail.png");
-	    this.load.image("pending_game_backdrop", "resource/backdrop.png");
-	    this.load.image("round_end_display", "resource/end_of_round_window.png");
-	    this.load.image("repeating_bombs", "resource/repeating_bombs.png");
-	    this.load.image("lobby_backdrop", "resource/lobby_backdrop.png");
-	    this.load.image("bomberman_head_white", "resource/bomberman_head.png");
-	    this.load.image("bomberman_head_blue", "resource/bomberman_head_blue.png");
-	    this.load.image("bomberman_head_green", "resource/bomberman_head_green.png");
-	    this.load.image("bomberman_head_purple", "resource/bomberman_head_purple.png");
-	    this.load.image("bomberman_head_red", "resource/bomberman_head_red.png");
-	    this.load.image("bomberman_head_black", "resource/bomberman_head_black.png");
-	    this.load.image("bomb_count_powerup", "resource/BombPowerup.png");
-	    this.load.image("bomb_strength_powerup", "resource/FlamePowerup.png");
-	    this.load.image("speed_powerup", "resource/SpeedPowerup.png");
-	    this.load.image("bomb_count_notification", "resource/bomb_count_notification.png");
-	    this.load.image("bomb_strength_notification", "resource/omb_strength_notification.png");
-	    this.load.image("speed_notification", "resource/speed_notification.png");
-	    this.load.image("round_1", "resource/round_1.png");
-	    this.load.image("round_2", "resource/round_2.png");
-	    this.load.image("final_round", "resource/final_round.png");
-	    this.load.image("tiebreaker", "resource/tiebreaker.png");
+            this.load.audio("explosion", "assets/sounds/bomb.ogg");
+            this.load.audio("powerup", "assets/sounds/powerup.ogg");
+        },
 
-	    this.load.audio("explosion", "assets/sounds/bomb.ogg");
-	    this.load.audio("powerup", "assets/sounds/powerup.ogg");
-	  },
-
-	  create: function () {
-	    game.state.start("Lobby");
-	  }
+        create: function () {
+            game.state.start("Lobby");
+        }
 	};
 
 
@@ -208,19 +209,17 @@
 	var Lobby = function() {};
 	var TextConfigurer = __webpack_require__(10);
 
-	var initialSlotYOffset = 130;
-	var slotXOffset = 40;
+        var initialSlotYOffset = 350;
+        var slotXOffset = 155;
 	var lobbySlotDistance = 60;
 
 	var textXOffset = 260;
 	var textYOffset = 25;
-	var repeatingBombTilesprite;
 
 	module.exports = Lobby;
 
 	Lobby.prototype = {
-		init: function(rbts) {
-			repeatingBombTilesprite = rbts;
+        init: function () {
 		},
 
 		create: function() {
@@ -256,14 +255,8 @@
 					callback: null
 				}
 			};
-
-			if(repeatingBombTilesprite == null) {
-				repeatingBombTilesprite = game.add.tileSprite(0, 0, 608, 608, "repeating_bombs");
-			}
-
-			repeatingBombTilesprite.doNotDestroy = true;
-
-			this.backdrop = game.add.image(12.5, 12.5, "lobby_backdrop");
+            game.add.sprite(0, 0, 'background');
+            this.backdrop = game.add.image(130, 300, "background_b");
 
 			this.slots = [];
 			this.labels = [];
@@ -279,8 +272,6 @@
 		},
 
 		update: function() {
-			repeatingBombTilesprite.tilePosition.x++;
-			repeatingBombTilesprite.tilePosition.y--;
 		},
 
 		addSlots: function(gameData) {
@@ -314,12 +305,12 @@
 		hostGameAction: function(gameId) {
 			socket.emit("host game", {gameId: gameId});
 			socket.removeAllListeners();
-			game.state.start("StageSelect", true, false, gameId, repeatingBombTilesprite);
+            game.state.start("StageSelect", true, false, gameId);
 		},
 
 		joinGameAction: function(gameId) {
 			socket.removeAllListeners();
-			game.state.start("PendingGame", true, false, null, gameId, repeatingBombTilesprite);
+            game.state.start("PendingGame", true, false, null, gameId);
 		},
 
 		updateSlot: function(updateInfo) {
@@ -346,14 +337,14 @@
 
 	module.exports = PendingGame;
 
-	var xOffset = 40;
-	var yOffset = 50;
+        var xOffset = 180;
+        var yOffset = 25;
 
-	var buttonXOffset = 330;
-	var startGameButtonYOffset = 400;
-	var leaveButtonYOffset = 450;
+        var buttonXOffset = 345;
+        var startGameButtonYOffset = 320;
+        var leaveButtonYOffset = 370;
 
-	var characterSquareStartingX = 330;
+        var characterSquareStartingX = 345;
 	var characterSquareStartingY = 80;
 	var characterSquareXDistance = 105;
 	var characterSquareYDistance = 100;
@@ -361,21 +352,21 @@
 	var characterOffsetX = 4.5;
 	var characterOffsetY = 4.5;
 
-	var minPlayerMessageOffsetX = 80;
-	var minPlayerMessageOffsetY = 400;
+        var minPlayerMessageOffsetX = 330;
+        var minPlayerMessageOffsetY = 425;
 
-	var numCharacterSquares = 6;
+        var numCharacterSquares = 4;
 
 	var repeatingBombTilesprite;
 
 	PendingGame.prototype = {
-		init: function(tilemapName, gameId, rbts) {
+        init: function (tilemapName, gameId) {
 			this.tilemapName = tilemapName;
 			this.gameId = gameId;
-			repeatingBombTilesprite = rbts;
 		},
 
 		create: function() {
+            game.add.sprite(0, 0, 'background_s');
 			socket.emit("enter pending game", {gameId: this.gameId});
 
 			var backdrop = game.add.image(xOffset, yOffset, "pending_game_backdrop");
@@ -397,8 +388,6 @@
 		},
 
 		update: function() {
-			repeatingBombTilesprite.tilePosition.x++;
-			repeatingBombTilesprite.tilePosition.y--;
 		},
 
 		drawCharacterSquares: function(numOpenings) {
@@ -483,11 +472,9 @@
 		leaveGameAction: function() {
 			socket.emit("leave pending game");
 			socket.removeAllListeners();
-			game.state.start("Lobby", true, false, repeatingBombTilesprite);
 		},
 
 		startGame: function(data) {
-			repeatingBombTilesprite.doNotDestroy = false;
 			socket.removeAllListeners();
 			game.state.start("Level", true, false, data.mapName, data.players, this.id);
 		}
@@ -807,7 +794,6 @@
 	        bomb.remove();
 	      }
 	    }, level);
-	    console.info(data);
 	    data.destroyedTiles.forEach(function(destroyedTile) {
 	      this.map.removeTile(destroyedTile.col, destroyedTile.row, 1);
 	      if(destroyedTile.itemId) {
@@ -929,35 +915,35 @@
 
 	module.exports = StageSelect;
 
-	var xOffset = 40;
-	var yOffset = 50;
+        var xOffset = 180;
+        var yOffset = 25;
 
-	var thumbnailXOffset = 255;
-	var thumbnailYOffset = 150;
+        var thumbnailXOffset = 396;
+        var thumbnailYOffset = 125;
 
-	var stageNameYOffset = 328;
+        var stageNameYOffset = 320;
 
 	var repeatingBombTilesprite;
 
 	var stages = [
-		{name: "Limitless Brook", thumbnailKey: "limitless_brook_thumbnail", tilemapName: "levelOne", maxPlayers: 4, size: "small"},
+        {name: "Comeback", thumbnailKey: "first_", tilemapName: "First", maxPlayers: 4, size: "medium"},
 		{name: "Danger Desert", thumbnailKey: "danger_desert_thumbnail", tilemapName: "levelTwo", maxPlayers: 4, size: "medium"}
 	];
 
 	StageSelect.prototype = {
-		init: function(gameId, rbts) {
-			repeatingBombTilesprite = rbts;
+        init: function (gameId) {
 			this.gameId = gameId;
 		},
 
 		create: function() {
+            game.add.sprite(0, 0, 'background_s');
 			var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
 			this.selectedStageIndex = 0;
 			var initialStage = stages[this.selectedStageIndex];
 
-			this.leftButton = game.add.button(150, 180, "left_select_button", this.leftSelect, this, 1, 0);
-			this.rightButton = game.add.button(400, 180, "right_select_button", this.rightSelect, this, 1, 0);
-			this.okButton = game.add.button(495, 460, "ok_button", this.confirmStageSelection, this, 1, 0);
+            this.leftButton = game.add.button(300, 155, "left_select_button", this.leftSelect, this, 1, 0);
+            this.rightButton = game.add.button(530, 155, "right_select_button", this.rightSelect, this, 1, 0);
+            this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
 
 			this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, initialStage.thumbnailKey);
 
@@ -967,11 +953,11 @@
 			this.text.anchor.setTo(.5, .5);
 
 			// Display number of players
-			this.numPlayersText = game.add.text(145, 390, "Max # of players:   " + initialStage.maxPlayers);
+            this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + initialStage.maxPlayers);
 			this.configureText(this.numPlayersText, "white", 18);
 
 			// Display stage size
-			this.stageSizeText = game.add.text(145, 420, "Map size:   " + initialStage.size);
+            this.stageSizeText = game.add.text(360, 410, "Map size:   " + initialStage.size);
 			this.configureText(this.stageSizeText, "white", 18);
 		},
 
@@ -996,8 +982,6 @@
 		},
 
 		update: function() {
-			repeatingBombTilesprite.tilePosition.x++;
-			repeatingBombTilesprite.tilePosition.y--;
 		},
 
 		updateStageInfo: function() {
@@ -1018,7 +1002,7 @@
 			var selectedStage = stages[this.selectedStageIndex];
 
 			socket.emit("select stage", {mapName: selectedStage.tilemapName});
-			game.state.start("PendingGame", true, false, selectedStage.tilemapName, this.gameId, repeatingBombTilesprite);
+            game.state.start("PendingGame", true, false, selectedStage.tilemapName, this.gameId);
 		}
 	};
 
@@ -1189,61 +1173,60 @@
 
 	var remotePlayerUpdateInterval = 100;
 
-	var RemotePlayer = function(x, y, id, color) {
-		this.id = id;
-		this.previousPosition = {x: x, y: y};
-		this.lastMoveTime = 0;
-		this.targetPosition;
-	  this.spawnPoint = {x: x, y: y};
+        var RemotePlayer = function (x, y, id, color) {
+            this.id = id;
+            this.previousPosition = {x: x, y: y};
+            this.lastMoveTime = 0;
+            this.targetPosition;
+            this.spawnPoint = {x: x, y: y};
+            Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
+            game.physics.enable(this, Phaser.Physics.ARCADE);
 
-		Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
+            this.anchor.setTo(0.1, 0.6);
+            this.body.setSize(20, 19, 5, 16);
 
-		game.physics.enable(this, Phaser.Physics.ARCADE);
+            this.animations.add('up', [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
+            this.animations.add('down', [8, 9, 10, 11, 12, 13, 14, 15], 15, true);
+            this.animations.add('right', [16, 17, 18, 19, 20, 21, 22, 23], 15, true);
+            this.animations.add('left', [24, 25, 26, 27, 28, 29, 30, 31], 15, true);
 
-		this.anchor.setTo(.5, .5);
-
-		this.animations.add('down', [0, 1, 2, 3, 4], 10, true);
-	  this.animations.add('up', [5, 6, 7, 8, 9], 10, true);
-	  this.animations.add('right', [10, 11, 12], 10, true);
-	  this.animations.add('left', [13, 14, 15], 10, true);
-
-		game.add.existing(this);
+            game.add.existing(this);
 	};
 
 	RemotePlayer.prototype = Object.create(Phaser.Sprite.prototype);
 
-	RemotePlayer.prototype.interpolate = function(lastFrameTime) {
-		if(this.distanceToCover && lastFrameTime) {
-			if((this.distanceCovered.x < Math.abs(this.distanceToCover.x) || this.distanceCovered.y < Math.abs(this.distanceToCover.y))) {
-	          var fractionOfTimeStep = (game.time.now - lastFrameTime) / remotePlayerUpdateInterval;
-	          var distanceCoveredThisFrameX = fractionOfTimeStep * this.distanceToCover.x;
-	          var distanceCoveredThisFrameY = fractionOfTimeStep * this.distanceToCover.y;
+        RemotePlayer.prototype.interpolate = function (lastFrameTime) {
+            if (this.distanceToCover && lastFrameTime) {
+                if ((this.distanceCovered.x < Math.abs(this.distanceToCover.x) || this.distanceCovered.y < Math.abs(this.distanceToCover.y))) {
+                    var fractionOfTimeStep = (game.time.now - lastFrameTime) / remotePlayerUpdateInterval;
+                    var distanceCoveredThisFrameX = fractionOfTimeStep * this.distanceToCover.x;
+                    var distanceCoveredThisFrameY = fractionOfTimeStep * this.distanceToCover.y;
 
-	          this.distanceCovered.x += Math.abs(distanceCoveredThisFrameX);
-	          this.distanceCovered.y += Math.abs(distanceCoveredThisFrameY);
-
-	          this.position.x += distanceCoveredThisFrameX;
-	          this.position.y += distanceCoveredThisFrameY;
+                    this.distanceCovered.x += Math.abs(distanceCoveredThisFrameX);
+                    this.distanceCovered.y += Math.abs(distanceCoveredThisFrameY);
+                    console.log(this.position.x + "||" + this.position.y);
+                    this.position.x += distanceCoveredThisFrameX;
+                    this.position.y += distanceCoveredThisFrameY;
 	        } else {
-	          this.position.x = this.targetPosition.x;
-	          this.position.y = this.targetPosition.y;
+                    this.position.x = this.targetPosition.x;
+                    this.position.y = this.targetPosition.y;
 	        }
 	    }
 	}
 
-	RemotePlayer.prototype.reset = function() {
-	  this.x = this.spawnPoint.x;
-	  this.y = this.spawnPoint.y;
-	  this.frame = 0;
-	  this.previousPosition = {x: this.x, y: this.y};
-	  this.distanceToCover = null;
-	  this.distanceCovered = null;
-	  this.targetPosition = null
-	  this.lastMoveTime = null;
-	  
-	  if(!this.alive) {
-	    this.revive();
-	  }
+        RemotePlayer.prototype.reset = function () {
+            this.x = this.spawnPoint.x;
+            this.y = this.spawnPoint.y;
+            this.frame = 0;
+            this.previousPosition = {x: this.x, y: this.y};
+            this.distanceToCover = null;
+            this.distanceCovered = null;
+            this.targetPosition = null
+            this.lastMoveTime = null;
+
+            if (!this.alive) {
+                this.revive();
+            }
 	};
 
 	module.exports = RemotePlayer;
@@ -1305,17 +1288,17 @@
 
 	var screenWidth = game.width;
 
-	var xOffset = 100 - screenWidth;
-	var yOffset = 60;
+        var xOffset = 230 - screenWidth;
+        var yOffset = 20;
 
-	var headerXOffset = 150 - screenWidth;
-	var headerYOffset = 65;
+        var headerXOffset = 280 - screenWidth;
+        var headerYOffset = 25;
 
-	var winnerPicXOffset = 225 - screenWidth;
-	var winnerPicYOffset = 310;
+        var winnerPicXOffset = 360 - screenWidth;
+        var winnerPicYOffset = 270;
 
-	var defaultTextXOffset = 220 - screenWidth;
-	var defaultTextYOffset = 220;
+        var defaultTextXOffset = 350 - screenWidth;
+        var defaultTextYOffset = 180;
 
 	var singleWinnerText = "Winner is...";
 	var roundEndTieText = "Draw! Winners are...";

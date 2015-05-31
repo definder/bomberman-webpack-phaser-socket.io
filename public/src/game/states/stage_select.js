@@ -2,35 +2,35 @@ var StageSelect = function() {};
 
 module.exports = StageSelect;
 
-var xOffset = 40;
-var yOffset = 50;
+var xOffset = 180;
+var yOffset = 25;
 
-var thumbnailXOffset = 255;
-var thumbnailYOffset = 150;
+var thumbnailXOffset = 396;
+var thumbnailYOffset = 125;
 
-var stageNameYOffset = 328;
+var stageNameYOffset = 320;
 
 var repeatingBombTilesprite;
 
 var stages = [
-	{name: "Limitless Brook", thumbnailKey: "limitless_brook_thumbnail", tilemapName: "levelOne", maxPlayers: 4, size: "small"},
+    {name: "Comeback", thumbnailKey: "first_", tilemapName: "First", maxPlayers: 4, size: "medium"},
 	{name: "Danger Desert", thumbnailKey: "danger_desert_thumbnail", tilemapName: "levelTwo", maxPlayers: 4, size: "medium"}
 ];
 
 StageSelect.prototype = {
-	init: function(gameId, rbts) {
-		repeatingBombTilesprite = rbts;
+    init: function (gameId) {
 		this.gameId = gameId;
 	},
 
 	create: function() {
+        game.add.sprite(0, 0, 'background_s');
 		var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
 		this.selectedStageIndex = 0;
 		var initialStage = stages[this.selectedStageIndex];
 
-		this.leftButton = game.add.button(150, 180, "left_select_button", this.leftSelect, this, 1, 0);
-		this.rightButton = game.add.button(400, 180, "right_select_button", this.rightSelect, this, 1, 0);
-		this.okButton = game.add.button(495, 460, "ok_button", this.confirmStageSelection, this, 1, 0);
+        this.leftButton = game.add.button(300, 155, "left_select_button", this.leftSelect, this, 1, 0);
+        this.rightButton = game.add.button(530, 155, "right_select_button", this.rightSelect, this, 1, 0);
+        this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
 
 		this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, initialStage.thumbnailKey);
 
@@ -40,11 +40,11 @@ StageSelect.prototype = {
 		this.text.anchor.setTo(.5, .5);
 
 		// Display number of players
-		this.numPlayersText = game.add.text(145, 390, "Max # of players:   " + initialStage.maxPlayers);
+        this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + initialStage.maxPlayers);
 		this.configureText(this.numPlayersText, "white", 18);
 
 		// Display stage size
-		this.stageSizeText = game.add.text(145, 420, "Map size:   " + initialStage.size);
+        this.stageSizeText = game.add.text(360, 410, "Map size:   " + initialStage.size);
 		this.configureText(this.stageSizeText, "white", 18);
 	},
 
@@ -69,8 +69,6 @@ StageSelect.prototype = {
 	},
 
 	update: function() {
-		repeatingBombTilesprite.tilePosition.x++;
-		repeatingBombTilesprite.tilePosition.y--;
 	},
 
 	updateStageInfo: function() {
@@ -91,6 +89,6 @@ StageSelect.prototype = {
 		var selectedStage = stages[this.selectedStageIndex];
 
 		socket.emit("select stage", {mapName: selectedStage.tilemapName});
-		game.state.start("PendingGame", true, false, selectedStage.tilemapName, this.gameId, repeatingBombTilesprite);
+        game.state.start("PendingGame", true, false, selectedStage.tilemapName, this.gameId);
 	}
 };

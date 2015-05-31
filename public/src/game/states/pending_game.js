@@ -4,14 +4,14 @@ var PendingGame = function() {};
 
 module.exports = PendingGame;
 
-var xOffset = 40;
-var yOffset = 50;
+var xOffset = 180;
+var yOffset = 25;
 
-var buttonXOffset = 330;
-var startGameButtonYOffset = 400;
-var leaveButtonYOffset = 450;
+var buttonXOffset = 345;
+var startGameButtonYOffset = 320;
+var leaveButtonYOffset = 370;
 
-var characterSquareStartingX = 330;
+var characterSquareStartingX = 345;
 var characterSquareStartingY = 80;
 var characterSquareXDistance = 105;
 var characterSquareYDistance = 100;
@@ -19,21 +19,21 @@ var characterSquareYDistance = 100;
 var characterOffsetX = 4.5;
 var characterOffsetY = 4.5;
 
-var minPlayerMessageOffsetX = 80;
-var minPlayerMessageOffsetY = 400;
+var minPlayerMessageOffsetX = 330;
+var minPlayerMessageOffsetY = 425;
 
-var numCharacterSquares = 6;
+var numCharacterSquares = 4;
 
 var repeatingBombTilesprite;
 
 PendingGame.prototype = {
-	init: function(tilemapName, gameId, rbts) {
+    init: function (tilemapName, gameId) {
 		this.tilemapName = tilemapName;
 		this.gameId = gameId;
-		repeatingBombTilesprite = rbts;
 	},
 
 	create: function() {
+        game.add.sprite(0, 0, 'background_s');
 		socket.emit("enter pending game", {gameId: this.gameId});
 
 		var backdrop = game.add.image(xOffset, yOffset, "pending_game_backdrop");
@@ -55,8 +55,6 @@ PendingGame.prototype = {
 	},
 
 	update: function() {
-		repeatingBombTilesprite.tilePosition.x++;
-		repeatingBombTilesprite.tilePosition.y--;
 	},
 
 	drawCharacterSquares: function(numOpenings) {
@@ -141,11 +139,9 @@ PendingGame.prototype = {
 	leaveGameAction: function() {
 		socket.emit("leave pending game");
 		socket.removeAllListeners();
-		game.state.start("Lobby", true, false, repeatingBombTilesprite);
 	},
 
 	startGame: function(data) {
-		repeatingBombTilesprite.doNotDestroy = false;
 		socket.removeAllListeners();
 		game.state.start("Level", true, false, data.mapName, data.players, this.id);
 	}

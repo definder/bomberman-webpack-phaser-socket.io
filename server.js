@@ -178,7 +178,7 @@ function onPlaceBomb(data) {
     player.numBombsAlive++;
 
     var bombTimeoutId = setTimeout(function() {
-        console.log("detonatin with ", game.players);
+        //console.log("detonatin with ", game.players);
         var explosionData = bomb.detonate(game.map, player.bombStrength, game.players);
         player.numBombsAlive--;
 
