@@ -6,9 +6,8 @@ module.exports = Boot;
 
 Boot.prototype = {
 
-  preload: function () {
-    // Fill in later.
-  },
+    preload: function () {
+    },
 
   create: function () {
     game.stage.disableVisibilityChange = true; // So that game doesn't stop when window loses focus.

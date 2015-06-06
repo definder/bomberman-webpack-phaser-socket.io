@@ -181,7 +181,6 @@ function onPlaceBomb(data) {
         //console.log("detonatin with ", game.players);
         var explosionData = bomb.detonate(game.map, player.bombStrength, game.players);
         player.numBombsAlive--;
-
         socket.sockets.in(gameId).emit("detonate", {explosions: explosionData.explosions, id: bombId,
             destroyedTiles: explosionData.destroyedBlocks});
         delete game.bombs[bombId];

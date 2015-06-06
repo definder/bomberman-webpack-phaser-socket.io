@@ -1,4 +1,4 @@
-window.game = new Phaser.Game(875, 525, Phaser.AUTO, '');
+window.game = new Phaser.Game(875, 525, Phaser.AUTO, 'bomber');
 window.player = null;
 window.socket = null;
 window.level = null;

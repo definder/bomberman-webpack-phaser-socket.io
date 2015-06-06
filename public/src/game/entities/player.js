@@ -1,8 +1,8 @@
 console.log(typeof require);
 var Bomb = require("./bomb");
 
-var DEFAULT_PLAYER_SPEED = 180;
-var PLAYER_SPEED_POWERUP_INCREMENT = 60;
+var DEFAULT_PLAYER_SPEED = 250;
+var PLAYER_SPEED_POWERUP_INCREMENT = 25;
 
 var Player = function(x, y, id, color) {
 	Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);

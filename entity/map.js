@@ -2,14 +2,11 @@ var ItemGenerator = require("../util/item_generator");
 var PowerupIDs = require("../common/powerup_ids");
 
 var Map = function(data, tileSize) {
-	// initialize map by parsing the tilemap data from the client into a 2d array.
 	this.mapData = [];
 	this.placedBombs = [];
 	this.tileSize = tileSize;
-
 	var tiles = data.tiles;
 	var i = 0;
-
 	for(var row = 0; row < data.height; row++) {
 		this.mapData.push([]);
 		this.placedBombs.push([]);
@@ -28,7 +25,6 @@ var Map = function(data, tileSize) {
 };
 
 Map.prototype = {
-	// Return the type of block that a tile represents.
 	hitTest: function(x, y) {
 		var row = Math.floor(y / this.tileSize), col = Math.floor(x / this.tileSize);
 		return {
@@ -38,7 +34,6 @@ Map.prototype = {
 		};
 	},
 
-	// Returns tile center for bomb's location if successful. Returns -1 if the space is occupied by an existing bomb.
 	placeBombOnGrid: function(x, y) {
 		var col = Math.floor(x / this.tileSize), row = Math.floor(y / this.tileSize);
 		if(this.bombExistsAtLocation(row, col)) {
@@ -65,7 +60,6 @@ Map.prototype = {
 		var row = Math.floor(y / this.tileSize), col = Math.floor(x / this.tileSize);
 		var hitBlock = this.mapData[row][col];
 		if(PowerupIDs.isAPowerup(hitBlock)) {
-			console.log("powerup acquired, yo.");
 			this.mapData[row][col] = 0;
 			return {
 				powerupType: hitBlock,

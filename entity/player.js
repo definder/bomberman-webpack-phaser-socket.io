@@ -13,7 +13,7 @@ var Player = function(xSpawn, ySpawn, facing, id, color) {
 	this.bombStrength = 1;
 	this.bombCapacity = 3;
 	this.numBombsAlive = 0;
-}
+};
 
 Player.prototype = {
 	resetForNewRound: function() {
@@ -25,6 +25,6 @@ Player.prototype = {
 		this.bombCapacity = 3;
 		this.numBombsAlive = 0;
 	}
-}
+};
 
 module.exports = Player;

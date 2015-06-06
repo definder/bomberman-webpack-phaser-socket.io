@@ -1,4 +1,3 @@
-// Store this somewhere as metadata?
 var colorIndices = {
 	"white": 0,
 	"black": 1,
@@ -6,7 +5,7 @@ var colorIndices = {
 	"red": 3,
 	"purple": 4,
 	"green": 5
-}
+};
 
 var PendingGame = function() {
 	this.players = {};

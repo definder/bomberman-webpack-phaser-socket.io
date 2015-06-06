@@ -139,6 +139,7 @@ PendingGame.prototype = {
 	leaveGameAction: function() {
 		socket.emit("leave pending game");
 		socket.removeAllListeners();
+        game.state.start("Lobby");
 	},
 
 	startGame: function(data) {

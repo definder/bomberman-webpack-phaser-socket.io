@@ -3,6 +3,7 @@
 <head> 
 	<meta charset="UTF-8" />
     <title>Bomb Arena</title>
+    <link rel="stylesheet" href="css/style.css"/>
     <script type="text/javascript">
         WebFontConfig = {
           google: { families: [ 'Carter+One::latin' ] }
@@ -15,17 +16,15 @@
             wf.async = 'true';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(wf, s);
-        })(); 
+        })();
     </script>
     <script src="src/lib/phaser.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="bundle.js"></script>
-    <style type="text/css">
-        body {
-            margin: 0;
-        }
-    </style>
 </head>
 <body>
+<div id="bomber">
+
+</div>
 </body>
 </html>

@@ -3,10 +3,6 @@ var Preloader = function () {
 
 module.exports = Preloader;
 
-// WebFontConfig = {
-//    google: { families: [ "Carter One" ] }
-// };
-
 Preloader.prototype = {
 
     preload: function () {
@@ -35,9 +31,8 @@ Preloader.prototype = {
         this.load.image("select_stage", "resource/select_stage.png");
         this.load.image("first_", "assets/levels/thumbnails/first_.png");
         this.load.image("danger_desert_thumbnail", "assets/levels/thumbnails/danger_desert_thumbnail.png");
-        this.load.image("pending_game_backdrop", "resource/backdrop.png");
+        this.load.image("pending_game_backdrop", "resource/lobby_backdrop.png");
         this.load.image("round_end_display", "resource/end_of_round_window.png");
-        this.load.image("repeating_bombs", "resource/repeating_bombs.png");
         this.load.image("bomberman_head_white", "resource/icon_white.png");
         this.load.image("bomberman_head_blue", "resource/icon_blue.png");
         this.load.image("bomberman_head_green", "resource/icon_green.png");
@@ -60,6 +55,7 @@ Preloader.prototype = {
 
         this.load.audio("explosion", "assets/sounds/bomb.ogg");
         this.load.audio("powerup", "assets/sounds/powerup.ogg");
+        this.load.audio("music", "assets/sounds/music.ogg");
     },
 
     create: function () {
