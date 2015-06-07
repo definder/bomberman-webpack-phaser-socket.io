@@ -25,7 +25,6 @@ function RoundEndAnimation(game, roundNumber, winningColors) {
 	var header = game.add.text(headerXOffset, headerYOffset, "Round " + roundNumber + " Complete!")
 	TextConfigurer.configureText(header, "white", 32);
 
-	// Text and offset differ based on whether or not there was a tie.
 	var actualTextXOffset = winningColors.length > 1 ? defaultTextXOffset - 55 : defaultTextXOffset;
 	var actualTextToDisplay = winningColors.length > 1 ? roundEndTieText : singleWinnerText;
 
@@ -83,7 +82,6 @@ RoundEndAnimation.prototype.beginAnimation = function(callback) {
 	entranceTween.start();
 };
 
-// TODO: Make it so that the very last winner image tween doesn't fade out.
 RoundEndAnimation.prototype.generateWinnerImageTween = function(indices, nextTween) {
 	var winnerImageTweens = [];
 	var ctx = this;

@@ -29,7 +29,6 @@ Level.prototype = {
     },
 
     setEventHandlers: function () {
-        // Remember - these will actually be executed from the context of the Socket, not from the context of the level.
         socket.on("disconnect", this.onSocketDisconnect);
         socket.on("move player", this.onMovePlayer.bind(this));
         socket.on("remove player", this.onRemovePlayer.bind(this));
@@ -67,7 +66,7 @@ Level.prototype = {
         this.dimGraphic.alpha = .7;
         this.dimGraphic.beginFill(BLACK_HEX_CODE, 1); // (color, alpha)
         this.dimGraphic.drawRect(0, 0, game.camera.width, game.camera.height);
-        this.dimGraphic.endFill(); // Draw to canvas
+        this.dimGraphic.endFill();
     },
 
     restartGame: function () {
@@ -115,7 +114,6 @@ Level.prototype = {
     },
 
     onEndGame: function (data) {
-        // TODO: Tear down the state.
         this.createDimGraphic();
         this.gameFrozen = true;
         var animation = new RoundEndAnimation(game, data.completedRoundNumber, data.roundWinnerColors);
@@ -123,7 +121,6 @@ Level.prototype = {
             game.state.start("GameOver", true, false, data.gameWinnerColor, false);
         });
         AudioPlayer.stopMusicSound();
-        console.log('stopMusic');
     },
 
     onNoOpponentsLeft: function (data) {
@@ -227,7 +224,6 @@ Level.prototype = {
     },
 
     initializeMap: function () {
-        // This call to add.tilemap doesn't actually add anything to the game, it just creates a tilemap.
         this.map = game.add.tilemap('First');
         var mapInfo = MapInfo['First'];
 
@@ -237,12 +233,8 @@ Level.prototype = {
         this.groundLayer.resizeWorld();
         this.blockLayer = new Phaser.TilemapLayer(game, this.map, this.map.getLayerIndex(mapInfo.blockLayer), game.width, game.height);
         game.world.addAt(this.blockLayer, 1);
-        this.blockLayer.resizeWorld(); // Set the world size to match the size of this layer.
-
+        this.blockLayer.resizeWorld();
         this.map.setCollision(mapInfo.collisionTiles, true, mapInfo.blockLayer);
-
-        // Send map data to server so it can do collisions.
-        // TODO: do not allow the game to start until this operation is complete.
         var blockLayerData = game.cache.getTilemapData(this.tilemapName).data.layers[1];
         socket.emit("register map", {
             tiles: blockLayerData.data,
@@ -256,26 +248,20 @@ Level.prototype = {
         if (player && data.id == player.id || this.gameFrozen) {
             return;
         }
-
         var movingPlayer = this.remotePlayers[data.id];
-
         if (movingPlayer.targetPosition) {
             if (data.x == movingPlayer.targetPosition.x && data.y == movingPlayer.targetPosition.y) {
                 return;
             }
-
             movingPlayer.animations.play(data.facing);
-
             movingPlayer.position.x = movingPlayer.targetPosition.x;
             movingPlayer.position.y = movingPlayer.targetPosition.y;
-
             movingPlayer.distanceToCover = {
                 x: data.x - movingPlayer.targetPosition.x,
                 y: data.y - movingPlayer.targetPosition.y
             };
             movingPlayer.distanceCovered = {x: 0, y: 0};
         }
-
         movingPlayer.targetPosition = {x: data.x, y: data.y};
         movingPlayer.lastMoveTime = game.time.now;
     },
@@ -308,8 +294,6 @@ Level.prototype = {
 
     onDetonate: function (data) {
         Bomb.renderExplosion(data.explosions);
-
-        //remove bomb from group. bombs is a Phaser.Group to make collisions easier.
         level.bombs.forEach(function (bomb) {
             if (bomb && bomb.id == data.id) {
                 bomb.remove();

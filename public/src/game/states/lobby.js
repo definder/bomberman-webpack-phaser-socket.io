@@ -4,7 +4,6 @@ var TextConfigurer = require('../util/text_configurer');
 var initialSlotYOffset = 350;
 var slotXOffset = 155;
 var lobbySlotDistance = 60;
-
 var textXOffset = 260;
 var textYOffset = 25;
 
@@ -49,14 +48,10 @@ Lobby.prototype = {
 		};
         game.add.sprite(0, 0, 'background');
         this.backdrop = game.add.image(130, 300, "background_b");
-
 		this.slots = [];
 		this.labels = [];
-
 		var gameData = [{state: "empty"}, {state: "empty"}, {state: "joinable"}, {state: "insession"}];
-
 		socket.emit("enter lobby");
-
 		if(!socket.hasListeners("add slots")) {
 			socket.on("add slots", this.addSlots.bind(this));
 			socket.on("update slot", this.updateSlot.bind(this));
@@ -69,12 +64,10 @@ Lobby.prototype = {
 	addSlots: function(gameData) {
 		if(this.slots.length > 0)  // TODO: get rid of this
 			return;
-
 		for(var i = 0; i < gameData.length; i++) {
 			var callback = null;
 			var state = gameData[i].state;
 			var settings = this.stateSettings[state];
-
 			(function(n, fn) {
 				if(fn != null) {
 					callback = function() {
@@ -82,14 +75,11 @@ Lobby.prototype = {
 					}
 				}
 			})(i, settings.callback);
-
 			var slotYOffset = initialSlotYOffset + i * lobbySlotDistance;
 			this.slots[i] = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
-			
 			var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
 			TextConfigurer.configureText(text, "white", 18);
 			text.anchor.setTo(.5, .5);
-
 			this.labels[i] = text;
 		}
 	},
@@ -109,11 +99,8 @@ Lobby.prototype = {
 		var settings = this.stateSettings[updateInfo.newState];
 		var id = updateInfo.gameId;
 		var button = this.slots[id];
-
 		this.labels[id].setText(settings.text);
 		button.setFrames(settings.overFrame, settings.outFrame);
-
-		// Change callback of button
 		button.onInputUp.removeAll();
 		button.onInputUp.add(function() { return settings.callback(id)}, this);
 	}

@@ -78,12 +78,9 @@
 
         var xOffset = 180;
         var yOffset = 25;
-
         var thumbnailXOffset = 396;
         var thumbnailYOffset = 125;
-
         var stageNameYOffset = 320;
-
         var repeatingBombTilesprite;
 
         var stages = [
@@ -100,33 +97,25 @@
         StageSelect.prototype = {
             init: function (gameId) {
                 this.gameId = gameId;
-		},
+            },
 
             create: function () {
                 game.add.sprite(0, 0, 'background_s');
                 var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
                 this.selectedStageIndex = 0;
                 var initialStage = stages[this.selectedStageIndex];
-
                 this.leftButton = game.add.button(300, 155, "left_select_button", this.leftSelect, this, 1, 0);
                 this.rightButton = game.add.button(530, 155, "right_select_button", this.rightSelect, this, 1, 0);
                 this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
-
                 this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, initialStage.thumbnailKey);
-
-                // Display title
                 this.text = game.add.text(game.camera.width / 2, stageNameYOffset, initialStage.name);
                 this.configureText(this.text, "white", 28);
                 this.text.anchor.setTo(.5, .5);
-
-                // Display number of players
                 this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + initialStage.maxPlayers);
                 this.configureText(this.numPlayersText, "white", 18);
-
-                // Display stage size
                 this.stageSizeText = game.add.text(360, 410, "Map size:   " + initialStage.size);
                 this.configureText(this.stageSizeText, "white", 18);
-		},
+            },
 
             leftSelect: function () {
                 if (this.selectedStageIndex === 0) {
@@ -136,7 +125,7 @@
                 }
 
                 this.updateStageInfo();
-            },
+		},
 
             rightSelect: function () {
                 if (this.selectedStageIndex === stages.length - 1) {
@@ -163,7 +152,7 @@
                 text.font = "Carter One";
                 text.fill = color;
                 text.fontSize = size;
-            },
+		},
 
             confirmStageSelection: function () {
                 var selectedStage = stages[this.selectedStageIndex];
@@ -225,7 +214,8 @@
 
         var AudioPlayer = __webpack_require__(4);
 
-	var Boot = function () {};
+        var Boot = function () {
+        };
 
 	module.exports = Boot;
 
@@ -234,26 +224,26 @@
         preload: function () {
         },
 
-	  create: function () {
-	    game.stage.disableVisibilityChange = true; // So that game doesn't stop when window loses focus.
-	    game.input.maxPointers = 1;
-	    AudioPlayer.initialize();
+        create: function () {
+            game.stage.disableVisibilityChange = true; // So that game doesn't stop when window loses focus.
+            game.input.maxPointers = 1;
+            AudioPlayer.initialize();
 
-	    if (game.device.desktop) {
-	      game.stage.scale.pageAlignHorizontally = true;
-	    } else {
-	      game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-	      game.stage.scale.minWidth =  480;
-	      game.stage.scale.minHeight = 260;
-	      game.stage.scale.maxWidth = 640;
-	      game.stage.scale.maxHeight = 480;
-	      game.stage.scale.forceLandscape = true;
-	      game.stage.scale.pageAlignHorizontally = true;
-	      game.stage.scale.setScreenSize(true);
-	    }
+            if (game.device.desktop) {
+                game.stage.scale.pageAlignHorizontally = true;
+            } else {
+                game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+                game.stage.scale.minWidth = 480;
+                game.stage.scale.minHeight = 260;
+                game.stage.scale.maxWidth = 640;
+                game.stage.scale.maxHeight = 480;
+                game.stage.scale.forceLandscape = true;
+                game.stage.scale.pageAlignHorizontally = true;
+                game.stage.scale.setScreenSize(true);
+            }
 
-	    game.state.start('Preloader');
-	  }
+            game.state.start('Preloader');
+        }
 	};
 
 
@@ -369,7 +359,6 @@
         var initialSlotYOffset = 350;
         var slotXOffset = 155;
 	var lobbySlotDistance = 60;
-
 	var textXOffset = 260;
 	var textYOffset = 25;
 
@@ -414,14 +403,10 @@
 			};
             game.add.sprite(0, 0, 'background');
             this.backdrop = game.add.image(130, 300, "background_b");
-
 			this.slots = [];
 			this.labels = [];
-
 			var gameData = [{state: "empty"}, {state: "empty"}, {state: "joinable"}, {state: "insession"}];
-
 			socket.emit("enter lobby");
-
 			if(!socket.hasListeners("add slots")) {
 				socket.on("add slots", this.addSlots.bind(this));
 				socket.on("update slot", this.updateSlot.bind(this));
@@ -434,12 +419,10 @@
 		addSlots: function(gameData) {
 			if(this.slots.length > 0)  // TODO: get rid of this
 				return;
-
 			for(var i = 0; i < gameData.length; i++) {
 				var callback = null;
 				var state = gameData[i].state;
 				var settings = this.stateSettings[state];
-
 				(function(n, fn) {
 					if(fn != null) {
 						callback = function() {
@@ -447,14 +430,11 @@
 						}
 					}
 				})(i, settings.callback);
-
 				var slotYOffset = initialSlotYOffset + i * lobbySlotDistance;
 				this.slots[i] = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
-				
 				var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
 				TextConfigurer.configureText(text, "white", 18);
 				text.anchor.setTo(.5, .5);
-
 				this.labels[i] = text;
 			}
 		},
@@ -474,11 +454,8 @@
 			var settings = this.stateSettings[updateInfo.newState];
 			var id = updateInfo.gameId;
 			var button = this.slots[id];
-
 			this.labels[id].setText(settings.text);
 			button.setFrames(settings.overFrame, settings.outFrame);
-
-			// Change callback of button
 			button.onInputUp.removeAll();
 			button.onInputUp.add(function() { return settings.callback(id)}, this);
 		}
@@ -492,7 +469,7 @@
             text.font = "Carter One";
             text.fill = color;
             text.fontSize = size;
-        }
+        };
 
         /***/
     },
@@ -507,25 +484,18 @@
 
         var xOffset = 180;
         var yOffset = 25;
-
         var buttonXOffset = 345;
         var startGameButtonYOffset = 320;
         var leaveButtonYOffset = 370;
-
         var characterSquareStartingX = 345;
 	var characterSquareStartingY = 80;
 	var characterSquareXDistance = 105;
 	var characterSquareYDistance = 100;
-
 	var characterOffsetX = 4.5;
 	var characterOffsetY = 4.5;
-
         var minPlayerMessageOffsetX = 330;
         var minPlayerMessageOffsetY = 425;
-
         var numCharacterSquares = 4;
-
-	var repeatingBombTilesprite;
 
 	PendingGame.prototype = {
         init: function (tilemapName, gameId) {
@@ -536,7 +506,6 @@
 		create: function() {
             game.add.sprite(0, 0, 'background_s');
 			socket.emit("enter pending game", {gameId: this.gameId});
-
 			var backdrop = game.add.image(xOffset, yOffset, "pending_game_backdrop");
 			this.startGameButton = game.add.button(buttonXOffset, startGameButtonYOffset, "start_game_button", null, this,
 				2, 2);
@@ -544,11 +513,9 @@
 			this.characterSquares = this.drawCharacterSquares(4);
 			this.characterImages = [];
 			this.numPlayersInGame = 0;
-
 			this.minPlayerMessage = game.add.text(minPlayerMessageOffsetX, minPlayerMessageOffsetY, "Cannot start game without\nat least 2 players.")
 			TextConfigurer.configureText(this.minPlayerMessage, "red", 17);
 			this.minPlayerMessage.visible = false;
-
 			socket.on("show current players", this.populateCharacterSquares.bind(this));
 			socket.on("player joined", this.playerJoined.bind(this));
 			socket.on("player left", this.playerLeft.bind(this));
@@ -562,7 +529,6 @@
 			var characterSquares = [];
 			var yOffset = characterSquareStartingY;
 			var xOffset = characterSquareStartingX;
-
 			for(var i = 0; i < numCharacterSquares; i++) {
 				var frame = i < numOpenings ? 0 : 1;
 				characterSquares[i] = game.add.sprite(xOffset, yOffset, "character_square", frame);
@@ -573,20 +539,17 @@
 					yOffset += characterSquareYDistance;
 				}
 			}
-
 			return characterSquares;
 		},
 
 		populateCharacterSquares: function(data) {
 			this.numPlayersInGame = 0;
-
 			for(var playerId in data.players) {
 				var color = data.players[playerId].color;
 				this.characterImages[playerId] = game.add.image(this.characterSquares[this.numPlayersInGame].position.x + characterOffsetX, 
 					this.characterSquares[this.numPlayersInGame].position.y + characterOffsetY, "bomberman_head_" + color);
 				this.numPlayersInGame++;
 			}
-
 			if(this.numPlayersInGame > 1) {
 				this.activateStartGameButton();
 			} else {
@@ -597,10 +560,7 @@
 		playerJoined: function(data) {
 			this.numPlayersInGame++;
 			var index = this.numPlayersInGame - 1;
-
 			this.characterImages[data.id] = game.add.image(this.characterSquares[index].position.x + characterOffsetX, this.characterSquares[index].position.y + characterOffsetY, "bomberman_head_" +  data.color);
-
-			// Activate start game button if this is the second player to join the game.
 			if(this.numPlayersInGame == 2) {
 				this.activateStartGameButton();
 			}
@@ -621,18 +581,14 @@
 
 		playerLeft: function(data) {
 			this.numPlayersInGame--;
-
 			if(this.numPlayersInGame == 1) {
 				this.deactivateStartGameButton();
 			}
-
 			for(var playerId in this.characterImages) {
 				this.characterImages[playerId].destroy();
 			}
 			this.populateCharacterSquares(data);
 		},
-
-		// When the "start" button is clicked, send a message to the server to initialize the game.
 		startGameAction: function() {
 			socket.emit("start game on server");
 		},
@@ -684,7 +640,6 @@
         },
 
         setEventHandlers: function () {
-            // Remember - these will actually be executed from the context of the Socket, not from the context of the level.
             socket.on("disconnect", this.onSocketDisconnect);
             socket.on("move player", this.onMovePlayer.bind(this));
             socket.on("remove player", this.onRemovePlayer.bind(this));
@@ -722,7 +677,7 @@
             this.dimGraphic.alpha = .7;
             this.dimGraphic.beginFill(BLACK_HEX_CODE, 1); // (color, alpha)
             this.dimGraphic.drawRect(0, 0, game.camera.width, game.camera.height);
-            this.dimGraphic.endFill(); // Draw to canvas
+            this.dimGraphic.endFill();
         },
 
         restartGame: function () {
@@ -770,7 +725,6 @@
         },
 
         onEndGame: function (data) {
-            // TODO: Tear down the state.
             this.createDimGraphic();
             this.gameFrozen = true;
             var animation = new RoundEndAnimation(game, data.completedRoundNumber, data.roundWinnerColors);
@@ -778,7 +732,6 @@
                 game.state.start("GameOver", true, false, data.gameWinnerColor, false);
             });
             AudioPlayer.stopMusicSound();
-            console.log('stopMusic');
         },
 
         onNoOpponentsLeft: function (data) {
@@ -882,7 +835,6 @@
         },
 
         initializeMap: function () {
-            // This call to add.tilemap doesn't actually add anything to the game, it just creates a tilemap.
             this.map = game.add.tilemap('First');
             var mapInfo = MapInfo['First'];
 
@@ -892,12 +844,8 @@
             this.groundLayer.resizeWorld();
             this.blockLayer = new Phaser.TilemapLayer(game, this.map, this.map.getLayerIndex(mapInfo.blockLayer), game.width, game.height);
             game.world.addAt(this.blockLayer, 1);
-            this.blockLayer.resizeWorld(); // Set the world size to match the size of this layer.
-
+            this.blockLayer.resizeWorld();
             this.map.setCollision(mapInfo.collisionTiles, true, mapInfo.blockLayer);
-
-            // Send map data to server so it can do collisions.
-            // TODO: do not allow the game to start until this operation is complete.
             var blockLayerData = game.cache.getTilemapData(this.tilemapName).data.layers[1];
             socket.emit("register map", {
                 tiles: blockLayerData.data,
@@ -911,26 +859,20 @@
             if (player && data.id == player.id || this.gameFrozen) {
                 return;
             }
-
             var movingPlayer = this.remotePlayers[data.id];
-
             if (movingPlayer.targetPosition) {
                 if (data.x == movingPlayer.targetPosition.x && data.y == movingPlayer.targetPosition.y) {
                     return;
                 }
-
                 movingPlayer.animations.play(data.facing);
-
                 movingPlayer.position.x = movingPlayer.targetPosition.x;
                 movingPlayer.position.y = movingPlayer.targetPosition.y;
-
                 movingPlayer.distanceToCover = {
                     x: data.x - movingPlayer.targetPosition.x,
                     y: data.y - movingPlayer.targetPosition.y
                 };
                 movingPlayer.distanceCovered = {x: 0, y: 0};
             }
-
             movingPlayer.targetPosition = {x: data.x, y: data.y};
             movingPlayer.lastMoveTime = game.time.now;
         },
@@ -963,8 +905,6 @@
 
         onDetonate: function (data) {
             Bomb.renderExplosion(data.explosions);
-
-            //remove bomb from group. bombs is a Phaser.Group to make collisions easier.
             level.bombs.forEach(function (bomb) {
                 if (bomb && bomb.id == data.id) {
                     bomb.remove();
@@ -1055,90 +995,90 @@
         var DEFAULT_PLAYER_SPEED = 250;
         var PLAYER_SPEED_POWERUP_INCREMENT = 25;
 
-	var Player = function(x, y, id, color) {
-		Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
+        var Player = function (x, y, id, color) {
+            Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
 
-	  this.spawnPoint = {x: x, y: y};
-	  this.id = id;
-	  this.facing = "down";
-	  this.bombButtonJustPressed = false;
-	  this.speed = DEFAULT_PLAYER_SPEED;
+            this.spawnPoint = {x: x, y: y};
+            this.id = id;
+            this.facing = "down";
+            this.bombButtonJustPressed = false;
+            this.speed = DEFAULT_PLAYER_SPEED;
 
-		game.physics.enable(this, Phaser.Physics.ARCADE);
+            game.physics.enable(this, Phaser.Physics.ARCADE);
 
-	    this.anchor.setTo(0.1,0.6);
+            this.anchor.setTo(0.1, 0.6);
 	    this.body.setSize(20, 19, 5, 16);
 
-	    this.animations.add('up', [0,1,2,3,4,5,6,7], 15, true);
-	    this.animations.add('down', [8,9,10,11,12,13,14,15], 15, true);
-	    this.animations.add('right', [16,17,18,19,20,21,22,23], 15, true);
-	    this.animations.add('left', [24,25,26,27,28,29,30,31], 15, true);
+            this.animations.add('up', [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
+            this.animations.add('down', [8, 9, 10, 11, 12, 13, 14, 15], 15, true);
+            this.animations.add('right', [16, 17, 18, 19, 20, 21, 22, 23], 15, true);
+            this.animations.add('left', [24, 25, 26, 27, 28, 29, 30, 31], 15, true);
 
-		game.add.existing(this);
+            game.add.existing(this);
 	};
 
 	Player.prototype = Object.create(Phaser.Sprite.prototype);
 
-	Player.prototype.handleInput = function() {
-	  this.handleMotionInput();
-	  this.handleBombInput();
+        Player.prototype.handleInput = function () {
+            this.handleMotionInput();
+            this.handleBombInput();
 	};
 
-	Player.prototype.handleMotionInput = function() {
-		  var moving = true;
+        Player.prototype.handleMotionInput = function () {
+            var moving = true;
 
 	    game.physics.arcade.collide(this, level.blockLayer);
 	    game.physics.arcade.collide(this, level.bombs);
 
-	  	if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-	  		this.body.velocity.y = 0;
-	  		this.body.velocity.x = -this.speed;
-	  		this.facing = "left";
-	  	} else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-	  		this.body.velocity.y = 0;
-	  		this.body.velocity.x = this.speed;
-	  		this.facing = "right";
-	  	} else if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-	  		this.body.velocity.x = 0;
-	  		this.body.velocity.y = -this.speed;
-	  		this.facing = "up";
-	  	} else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-	  		this.body.velocity.x = 0;
-	  		this.body.velocity.y = this.speed;
-	  		this.facing = "down";
-	  	} else {
-	      moving = false;
-	  		this.freeze();
-	  	}
+            if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+                this.body.velocity.y = 0;
+                this.body.velocity.x = -this.speed;
+                this.facing = "left";
+            } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+                this.body.velocity.y = 0;
+                this.body.velocity.x = this.speed;
+                this.facing = "right";
+            } else if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+                this.body.velocity.x = 0;
+                this.body.velocity.y = -this.speed;
+                this.facing = "up";
+            } else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+                this.body.velocity.x = 0;
+                this.body.velocity.y = this.speed;
+                this.facing = "down";
+            } else {
+                moving = false;
+                this.freeze();
+            }
 
-	  	if(moving)  {
-	      this.animations.play(this.facing);
-	      socket.emit("move player", {x: this.position.x, y: this.position.y, facing: this.facing});
+            if (moving) {
+                this.animations.play(this.facing);
+                socket.emit("move player", {x: this.position.x, y: this.position.y, facing: this.facing});
 	    }
-	  };
+        };
 
-	  Player.prototype.handleBombInput = function() {
-	    if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !game.physics.arcade.overlap(this, level.bombs) && !this.bombButtonJustPressed) {
-	      this.bombButtonJustPressed = true;
+        Player.prototype.handleBombInput = function () {
+            if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !game.physics.arcade.overlap(this, level.bombs) && !this.bombButtonJustPressed) {
+                this.bombButtonJustPressed = true;
 
-	      // Bombs for a player are identified by timestamp.
-	      socket.emit("place bomb", {x: this.body.position.x, y: this.body.position.y, id: game.time.now});
-	    } else if(!game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.bombButtonJustPressed) {
-	      this.bombButtonJustPressed = false;
+                // Bombs for a player are identified by timestamp.
+                socket.emit("place bomb", {x: this.body.position.x, y: this.body.position.y, id: game.time.now});
+            } else if (!game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.bombButtonJustPressed) {
+                this.bombButtonJustPressed = false;
 	    }
-	  };
+        };
 
-	  Player.prototype.freeze = function() {
+        Player.prototype.freeze = function () {
 	    this.body.velocity.x = 0;
 	    this.body.velocity.y = 0;
 	    this.animations.stop();
-	  };
+        };
 
-	  Player.prototype.applySpeedPowerup = function() {
+        Player.prototype.applySpeedPowerup = function () {
 	    this.speed += PLAYER_SPEED_POWERUP_INCREMENT;
-	  };
+        };
 
-	  Player.prototype.reset = function() {
+        Player.prototype.reset = function () {
 	    this.x = this.spawnPoint.x;
 	    this.y = this.spawnPoint.y;
 	    this.frame = 0;
@@ -1146,10 +1086,10 @@
 	    this.bombButtonJustPressed = false;
 	    this.speed = DEFAULT_PLAYER_SPEED;
 
-	    if(!this.alive) {
-	      this.revive();
+            if (!this.alive) {
+                this.revive();
 	    }
-	  };
+        };
 
 	module.exports = Player;
 
@@ -1180,7 +1120,7 @@
         Bomb.prototype.remove = function () {
             this.destroy();
             this.animations.stop();
-            this.sizeTween.stop(); // stop tween and mark it for deletion
+            this.sizeTween.stop();
         };
 
         Bomb.renderExplosion = function (explosions) {
@@ -1201,7 +1141,7 @@
                 explosionSprite.play("explode", 17, false);
                 AudioPlayer.playBombSound();
             });
-        }
+        };
 
         module.exports = Bomb;
 
@@ -1251,7 +1191,7 @@
                     this.position.y = this.targetPosition.y;
                 }
             }
-        }
+        };
 
         RemotePlayer.prototype.reset = function () {
             this.x = this.spawnPoint.x;
@@ -1302,7 +1242,6 @@
 		var header = game.add.text(headerXOffset, headerYOffset, "Round " + roundNumber + " Complete!")
 		TextConfigurer.configureText(header, "white", 32);
 
-		// Text and offset differ based on whether or not there was a tie.
 		var actualTextXOffset = winningColors.length > 1 ? defaultTextXOffset - 55 : defaultTextXOffset;
 		var actualTextToDisplay = winningColors.length > 1 ? roundEndTieText : singleWinnerText;
 
@@ -1360,7 +1299,6 @@
 		entranceTween.start();
 	};
 
-	// TODO: Make it so that the very last winner image tween doesn't fade out.
 	RoundEndAnimation.prototype.generateWinnerImageTween = function(indices, nextTween) {
 		var winnerImageTweens = [];
 		var ctx = this;
@@ -1428,7 +1366,7 @@
 	    upwardMotionTween.onComplete.addOnce(function(obj) {
 	      obj.destroy();
 	    });
-	}
+    };
 
         /***/
     },
@@ -1463,7 +1401,7 @@
             returnToLobby: function () {
                 game.state.start("Lobby");
             }
-        }
+        };
 
         module.exports = GameOver;
 

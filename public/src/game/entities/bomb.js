@@ -18,7 +18,7 @@ Bomb.prototype = Object.create(Phaser.Sprite.prototype);
 Bomb.prototype.remove = function () {
     this.destroy();
     this.animations.stop();
-    this.sizeTween.stop(); // stop tween and mark it for deletion
+    this.sizeTween.stop();
 };
 
 Bomb.renderExplosion = function (explosions) {
@@ -39,6 +39,6 @@ Bomb.renderExplosion = function (explosions) {
         explosionSprite.play("explode", 17, false);
         AudioPlayer.playBombSound();
     });
-}
+};
 
 module.exports = Bomb;

@@ -6,25 +6,18 @@ module.exports = PendingGame;
 
 var xOffset = 180;
 var yOffset = 25;
-
 var buttonXOffset = 345;
 var startGameButtonYOffset = 320;
 var leaveButtonYOffset = 370;
-
 var characterSquareStartingX = 345;
 var characterSquareStartingY = 80;
 var characterSquareXDistance = 105;
 var characterSquareYDistance = 100;
-
 var characterOffsetX = 4.5;
 var characterOffsetY = 4.5;
-
 var minPlayerMessageOffsetX = 330;
 var minPlayerMessageOffsetY = 425;
-
 var numCharacterSquares = 4;
-
-var repeatingBombTilesprite;
 
 PendingGame.prototype = {
     init: function (tilemapName, gameId) {
@@ -35,7 +28,6 @@ PendingGame.prototype = {
 	create: function() {
         game.add.sprite(0, 0, 'background_s');
 		socket.emit("enter pending game", {gameId: this.gameId});
-
 		var backdrop = game.add.image(xOffset, yOffset, "pending_game_backdrop");
 		this.startGameButton = game.add.button(buttonXOffset, startGameButtonYOffset, "start_game_button", null, this,
 			2, 2);
@@ -43,11 +35,9 @@ PendingGame.prototype = {
 		this.characterSquares = this.drawCharacterSquares(4);
 		this.characterImages = [];
 		this.numPlayersInGame = 0;
-
 		this.minPlayerMessage = game.add.text(minPlayerMessageOffsetX, minPlayerMessageOffsetY, "Cannot start game without\nat least 2 players.")
 		TextConfigurer.configureText(this.minPlayerMessage, "red", 17);
 		this.minPlayerMessage.visible = false;
-
 		socket.on("show current players", this.populateCharacterSquares.bind(this));
 		socket.on("player joined", this.playerJoined.bind(this));
 		socket.on("player left", this.playerLeft.bind(this));
@@ -61,7 +51,6 @@ PendingGame.prototype = {
 		var characterSquares = [];
 		var yOffset = characterSquareStartingY;
 		var xOffset = characterSquareStartingX;
-
 		for(var i = 0; i < numCharacterSquares; i++) {
 			var frame = i < numOpenings ? 0 : 1;
 			characterSquares[i] = game.add.sprite(xOffset, yOffset, "character_square", frame);
@@ -72,20 +61,17 @@ PendingGame.prototype = {
 				yOffset += characterSquareYDistance;
 			}
 		}
-
 		return characterSquares;
 	},
 
 	populateCharacterSquares: function(data) {
 		this.numPlayersInGame = 0;
-
 		for(var playerId in data.players) {
 			var color = data.players[playerId].color;
 			this.characterImages[playerId] = game.add.image(this.characterSquares[this.numPlayersInGame].position.x + characterOffsetX, 
 				this.characterSquares[this.numPlayersInGame].position.y + characterOffsetY, "bomberman_head_" + color);
 			this.numPlayersInGame++;
 		}
-
 		if(this.numPlayersInGame > 1) {
 			this.activateStartGameButton();
 		} else {
@@ -96,10 +82,7 @@ PendingGame.prototype = {
 	playerJoined: function(data) {
 		this.numPlayersInGame++;
 		var index = this.numPlayersInGame - 1;
-
 		this.characterImages[data.id] = game.add.image(this.characterSquares[index].position.x + characterOffsetX, this.characterSquares[index].position.y + characterOffsetY, "bomberman_head_" +  data.color);
-
-		// Activate start game button if this is the second player to join the game.
 		if(this.numPlayersInGame == 2) {
 			this.activateStartGameButton();
 		}
@@ -120,18 +103,14 @@ PendingGame.prototype = {
 
 	playerLeft: function(data) {
 		this.numPlayersInGame--;
-
 		if(this.numPlayersInGame == 1) {
 			this.deactivateStartGameButton();
 		}
-
 		for(var playerId in this.characterImages) {
 			this.characterImages[playerId].destroy();
 		}
 		this.populateCharacterSquares(data);
 	},
-
-	// When the "start" button is clicked, send a message to the server to initialize the game.
 	startGameAction: function() {
 		socket.emit("start game on server");
 	},

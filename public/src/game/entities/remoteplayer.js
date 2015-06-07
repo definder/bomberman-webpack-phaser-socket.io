@@ -39,7 +39,7 @@ RemotePlayer.prototype.interpolate = function (lastFrameTime) {
             this.position.y = this.targetPosition.y;
         }
     }
-}
+};
 
 RemotePlayer.prototype.reset = function () {
     this.x = this.spawnPoint.x;

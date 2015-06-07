@@ -26,6 +26,6 @@ GameOver.prototype = {
 	returnToLobby: function() {
 		game.state.start("Lobby");
 	}
-}
+};
 
 module.exports = GameOver;

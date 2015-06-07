@@ -20,4 +20,4 @@ exports.showPowerupNotification = function(powerupId, playerX, playerY) {
     upwardMotionTween.onComplete.addOnce(function(obj) {
       obj.destroy();
     });
-}
+};

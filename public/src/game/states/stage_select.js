@@ -4,12 +4,9 @@ module.exports = StageSelect;
 
 var xOffset = 180;
 var yOffset = 25;
-
 var thumbnailXOffset = 396;
 var thumbnailYOffset = 125;
-
 var stageNameYOffset = 320;
-
 var repeatingBombTilesprite;
 
 var stages = [
@@ -27,23 +24,15 @@ StageSelect.prototype = {
 		var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
 		this.selectedStageIndex = 0;
 		var initialStage = stages[this.selectedStageIndex];
-
         this.leftButton = game.add.button(300, 155, "left_select_button", this.leftSelect, this, 1, 0);
         this.rightButton = game.add.button(530, 155, "right_select_button", this.rightSelect, this, 1, 0);
         this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
-
 		this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, initialStage.thumbnailKey);
-
-		// Display title
 		this.text = game.add.text(game.camera.width / 2, stageNameYOffset, initialStage.name);
 		this.configureText(this.text, "white", 28);
 		this.text.anchor.setTo(.5, .5);
-
-		// Display number of players
         this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + initialStage.maxPlayers);
 		this.configureText(this.numPlayersText, "white", 18);
-
-		// Display stage size
         this.stageSizeText = game.add.text(360, 410, "Map size:   " + initialStage.size);
 		this.configureText(this.stageSizeText, "white", 18);
 	},

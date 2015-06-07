@@ -37,7 +37,6 @@ Game.prototype = {
 	calculateGameWinners: function() {
 		var winningPlayers = [];
 		var maxWinCount = 0;
-
 		for(var i in this.players) {
 			if(this.players[i].wins > maxWinCount) {
 				winningPlayers = [this.players[i]];
@@ -46,7 +45,6 @@ Game.prototype = {
 				winningPlayers.push(this.players[i]);
 			}
 		}
-
 		return winningPlayers;
 	},
 
