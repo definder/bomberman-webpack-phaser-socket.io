@@ -8,8 +8,6 @@ startGame();
 function startGame() {
     socket = io();
 
-    require("./game/mods/phaser_enhancements");
-
 	game.state.add("Boot", require("./game/states/boot"));
 	game.state.add("Preloader", require("./game/states/preloader"));
 	game.state.add("Lobby", require("./game/states/lobby"));

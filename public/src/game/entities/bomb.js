@@ -22,6 +22,7 @@ Bomb.prototype.remove = function () {
 };
 
 Bomb.renderExplosion = function (explosions) {
+    console.dir(level.deadGroup);
     explosions.forEach(function (explosion) {
         var explosionSprite = new Phaser.Sprite(game, explosion.x, explosion.y, explosion.key, 0);
         explosionSprite.anchor.setTo(.5, .5);
@@ -30,11 +31,7 @@ Bomb.renderExplosion = function (explosions) {
             level.deadGroup.push(this);
         }, explosionSprite);
 
-        if (explosion.hide) {
-            game.world.addAt(explosionSprite, 1);
-        } else {
-            game.world.add(explosionSprite);
-        }
+        game.world.addAt(explosionSprite, 1);
 
         explosionSprite.play("explode", 17, false);
         AudioPlayer.playBombSound();

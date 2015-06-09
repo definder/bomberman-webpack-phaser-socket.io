@@ -1,4 +1,8 @@
 var AudioPlayer = require("../util/audio_player");
+var TextConfigurer = require('../util/text_configurer');
+
+var textXOffset = 420;
+var textYOffset = 200;
 
 var Boot = function () {
 };
@@ -11,23 +15,16 @@ Boot.prototype = {
     },
 
     create: function () {
-        game.stage.disableVisibilityChange = true; // So that game doesn't stop when window loses focus.
+        game.stage.disableVisibilityChange = true;
         game.input.maxPointers = 1;
         AudioPlayer.initialize();
-
         if (game.device.desktop) {
             game.stage.scale.pageAlignHorizontally = true;
+            game.state.start('Preloader');
         } else {
-            game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-            game.stage.scale.minWidth = 480;
-            game.stage.scale.minHeight = 260;
-            game.stage.scale.maxWidth = 640;
-            game.stage.scale.maxHeight = 480;
-            game.stage.scale.forceLandscape = true;
-            game.stage.scale.pageAlignHorizontally = true;
-            game.stage.scale.setScreenSize(true);
+            var text = game.add.text(textXOffset, textYOffset, 'Please run the game on your computer');
+            TextConfigurer.configureText(text, "white", 45);
+            text.anchor.setTo(.5, .5);
         }
-
-        game.state.start('Preloader');
     }
 };

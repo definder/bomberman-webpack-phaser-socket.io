@@ -1,4 +1,3 @@
-console.log(typeof require);
 var Bomb = require("./bomb");
 
 var DEFAULT_PLAYER_SPEED = 250;
@@ -69,8 +68,6 @@ Player.prototype.handleMotionInput = function () {
 Player.prototype.handleBombInput = function () {
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !game.physics.arcade.overlap(this, level.bombs) && !this.bombButtonJustPressed) {
         this.bombButtonJustPressed = true;
-
-        // Bombs for a player are identified by timestamp.
         socket.emit("place bomb", {x: this.body.position.x, y: this.body.position.y, id: game.time.now});
     } else if (!game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.bombButtonJustPressed) {
         this.bombButtonJustPressed = false;

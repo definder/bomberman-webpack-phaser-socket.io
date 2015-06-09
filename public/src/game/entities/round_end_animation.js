@@ -1,16 +1,12 @@
 var TextConfigurer = require('../util/text_configurer');
 
 var screenWidth = game.width;
-
 var xOffset = 230 - screenWidth;
 var yOffset = 20;
-
 var headerXOffset = 280 - screenWidth;
 var headerYOffset = 25;
-
 var winnerPicXOffset = 360 - screenWidth;
 var winnerPicYOffset = 270;
-
 var defaultTextXOffset = 350 - screenWidth;
 var defaultTextYOffset = 180;
 
@@ -19,19 +15,14 @@ var roundEndTieText = "Draw! Winners are...";
 
 function RoundEndAnimation(game, roundNumber, winningColors) {
 	Phaser.Group.call(this, game);
-
 	var roundEndWindow = game.add.image(xOffset, yOffset, "round_end_display");
-
 	var header = game.add.text(headerXOffset, headerYOffset, "Round " + roundNumber + " Complete!")
 	TextConfigurer.configureText(header, "white", 32);
-
 	var actualTextXOffset = winningColors.length > 1 ? defaultTextXOffset - 55 : defaultTextXOffset;
 	var actualTextToDisplay = winningColors.length > 1 ? roundEndTieText : singleWinnerText;
-
 	var textObject = game.add.text(actualTextXOffset, defaultTextYOffset, actualTextToDisplay);
 	TextConfigurer.configureText(textObject, "white", 28);
 	textObject.alpha = 0;
-
 	this.add(roundEndWindow);
 	this.add(header);
 	this.add(textObject);
@@ -43,7 +34,7 @@ RoundEndAnimation.prototype = Object.create(Phaser.Group.prototype);
 
 RoundEndAnimation.prototype.createAndAddWinnerImages = function(winningColors) {
 	this.winnerImageIndices = [];
-	var index = 3; // 3 is the index of the first winner image.
+    var index = 3;
 
 	winningColors.forEach(function(color) {
 		var winnerPicImage = new Phaser.Image(game, winnerPicXOffset, winnerPicYOffset, "bomberman_head_" + color);

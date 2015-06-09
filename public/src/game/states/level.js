@@ -23,7 +23,7 @@ Level.prototype = {
 
     init: function (tilemapName, players, id) {
         this.tilemapName = 'First';
-        console.log(this.tilemapName + '||' + players + "||" + id);
+        //console.log(this.tilemapName + '||' + players + "||" + id);
         this.players = players;
         this.playerId = id;
     },
@@ -58,13 +58,13 @@ Level.prototype = {
 
         this.createDimGraphic();
         this.beginRoundAnimation("round_1");
-        AudioPlayer.playMusicSound();
+        //AudioPlayer.playMusicSound();
     },
 
     createDimGraphic: function () {
         this.dimGraphic = game.add.graphics(0, 0);
         this.dimGraphic.alpha = .7;
-        this.dimGraphic.beginFill(BLACK_HEX_CODE, 1); // (color, alpha)
+        this.dimGraphic.beginFill(BLACK_HEX_CODE, 1);
         this.dimGraphic.drawRect(0, 0, game.camera.width, game.camera.height);
         this.dimGraphic.endFill();
     },
@@ -108,7 +108,7 @@ Level.prototype = {
         } else if (data.completedRoundNumber == 2) {
             roundImage = "final_round";
         } else {
-            roundImage = "tiebreaker";
+            roundImage = "Oops";
         }
         datAnimationDoe.beginAnimation(this.beginRoundAnimation.bind(this, roundImage, this.restartGame.bind(this)));
     },
@@ -130,13 +130,11 @@ Level.prototype = {
     beginRoundAnimation: function (image, callback) {
         var beginRoundText = game.add.image(-600, game.camera.height / 2, image);
         beginRoundText.anchor.setTo(.5, .5);
-
         var tween = game.add.tween(beginRoundText);
         tween.to({x: game.camera.width / 2}, 300).to({x: 1000}, 300, Phaser.Easing.Default, false, 800).onComplete.add(function () {
             this.dimGraphic.destroy();
             beginRoundText.destroy();
             this.gameFrozen = false;
-
             if (callback) {
                 callback();
             }
@@ -202,7 +200,6 @@ Level.prototype = {
 
     onSocketDisconnect: function () {
         console.log("Disconnected from socket server.");
-
         socket.broadcast.emit("remove player", {id: this.id});
     },
 
@@ -224,8 +221,8 @@ Level.prototype = {
     },
 
     initializeMap: function () {
-        this.map = game.add.tilemap('First');
-        var mapInfo = MapInfo['First'];
+        this.map = game.add.tilemap(this.tilemapName);
+        var mapInfo = MapInfo[this.tilemapName];
 
         this.map.addTilesetImage(mapInfo.tilesetName, mapInfo.tilesetImage, 35, 35);
         this.groundLayer = new Phaser.TilemapLayer(game, this.map, this.map.getLayerIndex(mapInfo.groundLayer), game.width, game.height);
@@ -268,7 +265,6 @@ Level.prototype = {
 
     onRemovePlayer: function (data) {
         var playerToRemove = this.remotePlayers[data.id];
-
         if (playerToRemove.alive) {
             playerToRemove.destroy();
         }

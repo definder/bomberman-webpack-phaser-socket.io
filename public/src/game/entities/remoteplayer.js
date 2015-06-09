@@ -8,10 +8,8 @@ var RemotePlayer = function (x, y, id, color) {
     this.spawnPoint = {x: x, y: y};
     Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
     game.physics.enable(this, Phaser.Physics.ARCADE);
-
     this.anchor.setTo(0.1, 0.6);
     this.body.setSize(20, 19, 5, 16);
-
     this.animations.add('up', [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
     this.animations.add('down', [8, 9, 10, 11, 12, 13, 14, 15], 15, true);
     this.animations.add('right', [16, 17, 18, 19, 20, 21, 22, 23], 15, true);
@@ -28,10 +26,8 @@ RemotePlayer.prototype.interpolate = function (lastFrameTime) {
             var fractionOfTimeStep = (game.time.now - lastFrameTime) / remotePlayerUpdateInterval;
             var distanceCoveredThisFrameX = fractionOfTimeStep * this.distanceToCover.x;
             var distanceCoveredThisFrameY = fractionOfTimeStep * this.distanceToCover.y;
-
             this.distanceCovered.x += Math.abs(distanceCoveredThisFrameX);
             this.distanceCovered.y += Math.abs(distanceCoveredThisFrameY);
-            console.log(this.position.x + "||" + this.position.y);
             this.position.x += distanceCoveredThisFrameX;
             this.position.y += distanceCoveredThisFrameY;
         } else {

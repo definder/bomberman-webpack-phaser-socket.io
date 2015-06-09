@@ -18,7 +18,7 @@ Lobby.prototype = {
 			empty: {
 				outFrame: 0,
 				overFrame: 1,
-				text: "Host Game ", // For some reason, text gets slightly truncated if I don't append a space.
+                text: "Host Game ",
 				callback: this.hostGameAction
 			},
 			joinable: {
@@ -52,36 +52,26 @@ Lobby.prototype = {
 		this.labels = [];
 		var gameData = [{state: "empty"}, {state: "empty"}, {state: "joinable"}, {state: "insession"}];
 		socket.emit("enter lobby");
-		if(!socket.hasListeners("add slots")) {
-			socket.on("add slots", this.addSlots.bind(this));
-			socket.on("update slot", this.updateSlot.bind(this));
-		}
+        socket.on("add slots", this.addSlots.bind(this));
+        socket.on("update slot", this.updateSlot.bind(this));
 	},
 
 	update: function() {
 	},
 
 	addSlots: function(gameData) {
-		if(this.slots.length > 0)  // TODO: get rid of this
-			return;
-		for(var i = 0; i < gameData.length; i++) {
-			var callback = null;
-			var state = gameData[i].state;
-			var settings = this.stateSettings[state];
-			(function(n, fn) {
-				if(fn != null) {
-					callback = function() {
-						fn(n);
-					}
-				}
-			})(i, settings.callback);
-			var slotYOffset = initialSlotYOffset + i * lobbySlotDistance;
-			this.slots[i] = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
-			var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
-			TextConfigurer.configureText(text, "white", 18);
-			text.anchor.setTo(.5, .5);
-			this.labels[i] = text;
-		}
+        var state = gameData.state;
+        var settings = this.stateSettings[state];
+        callback = function () {
+            if (settings.callback != null)
+                settings.callback(1);
+        };
+        var slotYOffset = initialSlotYOffset + lobbySlotDistance;
+        this.slots = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
+        var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
+        TextConfigurer.configureText(text, "white", 18);
+        text.anchor.setTo(.5, .5);
+        this.labels = text;
 	},
 
 	hostGameAction: function(gameId) {
@@ -98,8 +88,8 @@ Lobby.prototype = {
 	updateSlot: function(updateInfo) {
 		var settings = this.stateSettings[updateInfo.newState];
 		var id = updateInfo.gameId;
-		var button = this.slots[id];
-		this.labels[id].setText(settings.text);
+        var button = this.slots;
+        this.labels.setText(settings.text);
 		button.setFrames(settings.overFrame, settings.outFrame);
 		button.onInputUp.removeAll();
 		button.onInputUp.add(function() { return settings.callback(id)}, this);

@@ -1,9 +1,29 @@
 {
   "name": "bomberman",
   "version": "0.0.1",
+  "description": "Multiplayer game.",
+  "main": "server.js",
   "scripts": {
     "test": "make test"
   },
+  "repository": {
+    "type": "git",
+    "url": "github.com/definder/bomberman-webpack-phaser-socket.io"
+  },
+  "keywords": [
+    "phaser",
+    "game",
+    "webpack",
+    "nodejs",
+    "socket.io",
+    "mocha",
+    "should"
+  ],
+  "author": {
+    "name": "Evgeniy Nemarskiy",
+    "email": "anegin_020@mail.ru"
+  },
+  "license": "ISC",
   "dependencies": {
     "express": "~4.12.3",
     "path": "~0.4.*",

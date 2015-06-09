@@ -54,15 +54,13 @@
 	function startGame() {
 	    socket = io();
 
-        __webpack_require__(2);
-
-        game.state.add("Boot", __webpack_require__(3));
-        game.state.add("Preloader", __webpack_require__(5));
-        game.state.add("Lobby", __webpack_require__(6));
-        game.state.add("StageSelect", __webpack_require__(1));
-        game.state.add("PendingGame", __webpack_require__(8));
-        game.state.add("Level", __webpack_require__(9));
-        game.state.add("GameOver", __webpack_require__(18));
+        game.state.add("Boot", __webpack_require__(1));
+        game.state.add("Preloader", __webpack_require__(4));
+        game.state.add("Lobby", __webpack_require__(5));
+        game.state.add("StageSelect", __webpack_require__(6));
+        game.state.add("PendingGame", __webpack_require__(7));
+        game.state.add("Level", __webpack_require__(8));
+        game.state.add("GameOver", __webpack_require__(17));
 
 		game.state.start('Boot');
 	};
@@ -71,185 +69,42 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-        var StageSelect = function () {
-        };
+        var AudioPlayer = __webpack_require__(2);
+        var TextConfigurer = __webpack_require__(3);
 
-        module.exports = StageSelect;
-
-        var xOffset = 180;
-        var yOffset = 25;
-        var thumbnailXOffset = 396;
-        var thumbnailYOffset = 125;
-        var stageNameYOffset = 320;
-        var repeatingBombTilesprite;
-
-        var stages = [
-            {name: "Comeback", thumbnailKey: "first_", tilemapName: "First", maxPlayers: 4, size: "medium"},
-            {
-                name: "Danger Desert",
-                thumbnailKey: "danger_desert_thumbnail",
-                tilemapName: "levelTwo",
-                maxPlayers: 4,
-                size: "medium"
-            }
-        ];
-
-        StageSelect.prototype = {
-            init: function (gameId) {
-                this.gameId = gameId;
-            },
-
-            create: function () {
-                game.add.sprite(0, 0, 'background_s');
-                var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
-                this.selectedStageIndex = 0;
-                var initialStage = stages[this.selectedStageIndex];
-                this.leftButton = game.add.button(300, 155, "left_select_button", this.leftSelect, this, 1, 0);
-                this.rightButton = game.add.button(530, 155, "right_select_button", this.rightSelect, this, 1, 0);
-                this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
-                this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, initialStage.thumbnailKey);
-                this.text = game.add.text(game.camera.width / 2, stageNameYOffset, initialStage.name);
-                this.configureText(this.text, "white", 28);
-                this.text.anchor.setTo(.5, .5);
-                this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + initialStage.maxPlayers);
-                this.configureText(this.numPlayersText, "white", 18);
-                this.stageSizeText = game.add.text(360, 410, "Map size:   " + initialStage.size);
-                this.configureText(this.stageSizeText, "white", 18);
-            },
-
-            leftSelect: function () {
-                if (this.selectedStageIndex === 0) {
-                    this.selectedStageIndex = stages.length - 1;
-                } else {
-                    this.selectedStageIndex--;
-                }
-
-                this.updateStageInfo();
-		},
-
-            rightSelect: function () {
-                if (this.selectedStageIndex === stages.length - 1) {
-                    this.selectedStageIndex = 0;
-                } else {
-                    this.selectedStageIndex++;
-                }
-
-                this.updateStageInfo();
-            },
-
-            update: function () {
-            },
-
-            updateStageInfo: function () {
-                var newStage = stages[this.selectedStageIndex];
-                this.text.setText(newStage.name);
-                this.numPlayersText.setText("Max # of players:   " + newStage.maxPlayers);
-                this.stageSizeText.setText("Map size:   " + newStage.size);
-                this.thumbnail.loadTexture(newStage.thumbnailKey);
-            },
-
-            configureText: function (text, color, size) {
-                text.font = "Carter One";
-                text.fill = color;
-                text.fontSize = size;
-		},
-
-            confirmStageSelection: function () {
-                var selectedStage = stages[this.selectedStageIndex];
-
-                socket.emit("select stage", {mapName: selectedStage.tilemapName});
-                game.state.start("PendingGame", true, false, selectedStage.tilemapName, this.gameId);
-		}
-        };
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-        /**
-         * Modified this method to be able to ignore certain children, so that select elements (such as scrolling background) can be preserved
-         * between states.
-         */
-        Phaser.Group.prototype.removeAll = function (destroy, silent) {
-
-            if (typeof destroy === 'undefined') {
-                destroy = false;
-            }
-            if (typeof silent === 'undefined') {
-                silent = false;
-            }
-
-            if (this.children.length === 0) {
-                return;
-            }
-
-            var i = 0;
-
-            do
-            {
-                if (this.children[i].doNotDestroy) {
-                    i++;
-                }
-
-                if (!silent && this.children[i].events) {
-                    this.children[i].events.onRemovedFromGroup.dispatch(this.children[i], this);
-                }
-
-                var removed = this.removeChild(this.children[i]);
-
-                if (destroy && removed) {
-                    removed.destroy(true);
-                }
-            }
-            while (this.children.length > i);
-
-            this.cursor = null;
-
-        };
-
-        /***/
-    },
-    /* 3 */
-    /***/ function (module, exports, __webpack_require__) {
-
-        var AudioPlayer = __webpack_require__(4);
+        var textXOffset = 420;
+        var textYOffset = 200;
 
         var Boot = function () {
         };
 
-	module.exports = Boot;
+        module.exports = Boot;
 
-	Boot.prototype = {
+        Boot.prototype = {
 
-        preload: function () {
-        },
+            preload: function () {
+            },
 
-        create: function () {
-            game.stage.disableVisibilityChange = true; // So that game doesn't stop when window loses focus.
-            game.input.maxPointers = 1;
-            AudioPlayer.initialize();
-
-            if (game.device.desktop) {
-                game.stage.scale.pageAlignHorizontally = true;
-            } else {
-                game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-                game.stage.scale.minWidth = 480;
-                game.stage.scale.minHeight = 260;
-                game.stage.scale.maxWidth = 640;
-                game.stage.scale.maxHeight = 480;
-                game.stage.scale.forceLandscape = true;
-                game.stage.scale.pageAlignHorizontally = true;
-                game.stage.scale.setScreenSize(true);
+            create: function () {
+                game.stage.disableVisibilityChange = true;
+                game.input.maxPointers = 1;
+                AudioPlayer.initialize();
+                if (game.device.desktop) {
+                    game.stage.scale.pageAlignHorizontally = true;
+                    game.state.start('Preloader');
+                } else {
+                    var text = game.add.text(textXOffset, textYOffset, 'Please run the game on your computer');
+                    TextConfigurer.configureText(text, "white", 45);
+                    text.anchor.setTo(.5, .5);
+                }
             }
-
-            game.state.start('Preloader');
-        }
-	};
+        };
 
 
-/***/ },
-    /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+        /***/
+    },
+    /* 2 */
+    /***/ function (module, exports, __webpack_require__) {
 
         var bombSound;
         var powerupSound;
@@ -264,7 +119,7 @@
 
             playBombSound: function () {
                 bombSound.play();
-            },
+		},
 
             playPowerupSound: function () {
                 powerupSound.play();
@@ -278,10 +133,19 @@
             }
         };
 
-        /***/
-    },
-    /* 5 */
-    /***/ function (module, exports, __webpack_require__) {
+/***/ },
+    /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+        exports.configureText = function (text, color, size) {
+            text.font = "Carter One";
+            text.fill = color;
+            text.fontSize = size;
+	};
+
+/***/ },
+    /* 4 */
+/***/ function(module, exports, __webpack_require__) {
 
         var Preloader = function () {
         };
@@ -350,11 +214,11 @@
 
 
 /***/ },
-    /* 6 */
+    /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Lobby = function() {};
-        var TextConfigurer = __webpack_require__(7);
+        var TextConfigurer = __webpack_require__(3);
 
         var initialSlotYOffset = 350;
         var slotXOffset = 155;
@@ -373,7 +237,7 @@
 				empty: {
 					outFrame: 0,
 					overFrame: 1,
-					text: "Host Game ", // For some reason, text gets slightly truncated if I don't append a space.
+                    text: "Host Game ",
 					callback: this.hostGameAction
 				},
 				joinable: {
@@ -407,36 +271,26 @@
 			this.labels = [];
 			var gameData = [{state: "empty"}, {state: "empty"}, {state: "joinable"}, {state: "insession"}];
 			socket.emit("enter lobby");
-			if(!socket.hasListeners("add slots")) {
-				socket.on("add slots", this.addSlots.bind(this));
-				socket.on("update slot", this.updateSlot.bind(this));
-			}
+            socket.on("add slots", this.addSlots.bind(this));
+            socket.on("update slot", this.updateSlot.bind(this));
 		},
 
 		update: function() {
 		},
 
 		addSlots: function(gameData) {
-			if(this.slots.length > 0)  // TODO: get rid of this
-				return;
-			for(var i = 0; i < gameData.length; i++) {
-				var callback = null;
-				var state = gameData[i].state;
-				var settings = this.stateSettings[state];
-				(function(n, fn) {
-					if(fn != null) {
-						callback = function() {
-							fn(n);
-						}
-					}
-				})(i, settings.callback);
-				var slotYOffset = initialSlotYOffset + i * lobbySlotDistance;
-				this.slots[i] = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
-				var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
-				TextConfigurer.configureText(text, "white", 18);
-				text.anchor.setTo(.5, .5);
-				this.labels[i] = text;
-			}
+            var state = gameData.state;
+            var settings = this.stateSettings[state];
+            callback = function () {
+                if (settings.callback != null)
+                    settings.callback(1);
+            };
+            var slotYOffset = initialSlotYOffset + lobbySlotDistance;
+            this.slots = game.add.button(slotXOffset, slotYOffset, "game_slot", callback, null, settings.overFrame, settings.outFrame);
+            var text = game.add.text(slotXOffset + textXOffset, slotYOffset + textYOffset, settings.text);
+            TextConfigurer.configureText(text, "white", 18);
+            text.anchor.setTo(.5, .5);
+            this.labels = text;
 		},
 
 		hostGameAction: function(gameId) {
@@ -453,8 +307,8 @@
 		updateSlot: function(updateInfo) {
 			var settings = this.stateSettings[updateInfo.newState];
 			var id = updateInfo.gameId;
-			var button = this.slots[id];
-			this.labels[id].setText(settings.text);
+            var button = this.slots;
+            this.labels.setText(settings.text);
 			button.setFrames(settings.overFrame, settings.outFrame);
 			button.onInputUp.removeAll();
 			button.onInputUp.add(function() { return settings.callback(id)}, this);
@@ -462,21 +316,62 @@
 	};
 
 /***/ },
-    /* 7 */
+    /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-        exports.configureText = function (text, color, size) {
-            text.font = "Carter One";
-            text.fill = color;
-            text.fontSize = size;
+        var StageSelect = function () {
+        };
+
+        module.exports = StageSelect;
+
+        var xOffset = 180;
+        var yOffset = 25;
+        var thumbnailXOffset = 396;
+        var thumbnailYOffset = 125;
+        var stageNameYOffset = 320;
+
+        var stages = {name: "Comeback", thumbnailKey: "first_", tilemapName: "First", maxPlayers: 4, size: "medium"};
+
+        StageSelect.prototype = {
+            init: function (gameId) {
+                this.gameId = gameId;
+            },
+
+            create: function () {
+                game.add.sprite(0, 0, 'background_s');
+                var selectionWindow = game.add.image(xOffset, yOffset, "select_stage");
+                this.okButton = game.add.button(625, 425, "ok_button", this.confirmStageSelection, this, 1, 0);
+                this.thumbnail = game.add.image(thumbnailXOffset, thumbnailYOffset, stages.thumbnailKey);
+                this.text = game.add.text(game.camera.width / 2, stageNameYOffset, stages.name);
+                this.configureText(this.text, "white", 28);
+                this.text.anchor.setTo(.5, .5);
+                this.numPlayersText = game.add.text(360, 380, "Max # of players:   " + stages.maxPlayers);
+                this.configureText(this.numPlayersText, "white", 18);
+                this.stageSizeText = game.add.text(360, 410, "Map size:   " + stages.size);
+                this.configureText(this.stageSizeText, "white", 18);
+            },
+
+            update: function () {
+            },
+
+            configureText: function (text, color, size) {
+                text.font = "Carter One";
+                text.fill = color;
+                text.fontSize = size;
+            },
+
+            confirmStageSelection: function () {
+                socket.emit("select stage", {mapName: stages.tilemapName});
+                game.state.start("PendingGame", true, false, stages.tilemapName, this.gameId);
+            }
         };
 
         /***/
     },
-    /* 8 */
+    /* 7 */
     /***/ function (module, exports, __webpack_require__) {
 
-        var TextConfigurer = __webpack_require__(7);
+        var TextConfigurer = __webpack_require__(3);
 
 	var PendingGame = function() {};
 
@@ -606,21 +501,21 @@
 	};
 
 /***/ },
-    /* 9 */
+    /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var BLACK_HEX_CODE = "#000000";
 	var TILE_SIZE = 35;
 
-        var PowerupIDs = __webpack_require__(10);
-        var MapInfo = __webpack_require__(11);
-        var AudioPlayer = __webpack_require__(4);
-        var Player = __webpack_require__(12);
-	var RemotePlayer = __webpack_require__(14);
-        var Bomb = __webpack_require__(13);
-        var RoundEndAnimation = __webpack_require__(15);
-        var PowerupImageKeys = __webpack_require__(16);
-        var PowerupNotificationPlayer = __webpack_require__(17);
+        var PowerupIDs = __webpack_require__(9);
+        var MapInfo = __webpack_require__(10);
+        var AudioPlayer = __webpack_require__(2);
+        var Player = __webpack_require__(11);
+        var RemotePlayer = __webpack_require__(13);
+        var Bomb = __webpack_require__(12);
+        var RoundEndAnimation = __webpack_require__(14);
+        var PowerupImageKeys = __webpack_require__(15);
+        var PowerupNotificationPlayer = __webpack_require__(16);
 
         var Level = function () {
         };
@@ -634,7 +529,7 @@
 
         init: function (tilemapName, players, id) {
             this.tilemapName = 'First';
-            console.log(this.tilemapName + '||' + players + "||" + id);
+            //console.log(this.tilemapName + '||' + players + "||" + id);
             this.players = players;
             this.playerId = id;
         },
@@ -669,13 +564,13 @@
 
             this.createDimGraphic();
             this.beginRoundAnimation("round_1");
-            AudioPlayer.playMusicSound();
+            //AudioPlayer.playMusicSound();
         },
 
         createDimGraphic: function () {
             this.dimGraphic = game.add.graphics(0, 0);
             this.dimGraphic.alpha = .7;
-            this.dimGraphic.beginFill(BLACK_HEX_CODE, 1); // (color, alpha)
+            this.dimGraphic.beginFill(BLACK_HEX_CODE, 1);
             this.dimGraphic.drawRect(0, 0, game.camera.width, game.camera.height);
             this.dimGraphic.endFill();
         },
@@ -719,7 +614,7 @@
             } else if (data.completedRoundNumber == 2) {
                 roundImage = "final_round";
             } else {
-                roundImage = "tiebreaker";
+                roundImage = "Oops";
             }
             datAnimationDoe.beginAnimation(this.beginRoundAnimation.bind(this, roundImage, this.restartGame.bind(this)));
         },
@@ -741,13 +636,11 @@
         beginRoundAnimation: function (image, callback) {
             var beginRoundText = game.add.image(-600, game.camera.height / 2, image);
             beginRoundText.anchor.setTo(.5, .5);
-
             var tween = game.add.tween(beginRoundText);
             tween.to({x: game.camera.width / 2}, 300).to({x: 1000}, 300, Phaser.Easing.Default, false, 800).onComplete.add(function () {
                 this.dimGraphic.destroy();
                 beginRoundText.destroy();
                 this.gameFrozen = false;
-
                 if (callback) {
                     callback();
                 }
@@ -813,7 +706,6 @@
 
         onSocketDisconnect: function () {
             console.log("Disconnected from socket server.");
-
             socket.broadcast.emit("remove player", {id: this.id});
         },
 
@@ -835,8 +727,8 @@
         },
 
         initializeMap: function () {
-            this.map = game.add.tilemap('First');
-            var mapInfo = MapInfo['First'];
+            this.map = game.add.tilemap(this.tilemapName);
+            var mapInfo = MapInfo[this.tilemapName];
 
             this.map.addTilesetImage(mapInfo.tilesetName, mapInfo.tilesetImage, 35, 35);
             this.groundLayer = new Phaser.TilemapLayer(game, this.map, this.map.getLayerIndex(mapInfo.groundLayer), game.width, game.height);
@@ -879,7 +771,6 @@
 
         onRemovePlayer: function (data) {
             var playerToRemove = this.remotePlayers[data.id];
-
             if (playerToRemove.alive) {
                 playerToRemove.destroy();
             }
@@ -943,7 +834,7 @@
 
 
 /***/ },
-/* 10 */
+    /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -959,7 +850,7 @@
 	};
 
 /***/ },
-    /* 11 */
+    /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var MapInfo = {
@@ -986,11 +877,10 @@
 	module.exports = MapInfo;
 
 /***/ },
-    /* 12 */
+    /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	console.log("function");
-        var Bomb = __webpack_require__(13);
+        var Bomb = __webpack_require__(12);
 
         var DEFAULT_PLAYER_SPEED = 250;
         var PLAYER_SPEED_POWERUP_INCREMENT = 25;
@@ -1060,8 +950,6 @@
         Player.prototype.handleBombInput = function () {
             if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !game.physics.arcade.overlap(this, level.bombs) && !this.bombButtonJustPressed) {
                 this.bombButtonJustPressed = true;
-
-                // Bombs for a player are identified by timestamp.
                 socket.emit("place bomb", {x: this.body.position.x, y: this.body.position.y, id: game.time.now});
             } else if (!game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.bombButtonJustPressed) {
                 this.bombButtonJustPressed = false;
@@ -1094,10 +982,10 @@
 	module.exports = Player;
 
 /***/ },
-    /* 13 */
+    /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-        var AudioPlayer = __webpack_require__(4);
+        var AudioPlayer = __webpack_require__(2);
 
         var Bomb = function (x, y, id) {
             Phaser.Sprite.call(this, game, x, y, "bomb");
@@ -1124,6 +1012,7 @@
         };
 
         Bomb.renderExplosion = function (explosions) {
+            console.dir(level.deadGroup);
             explosions.forEach(function (explosion) {
                 var explosionSprite = new Phaser.Sprite(game, explosion.x, explosion.y, explosion.key, 0);
                 explosionSprite.anchor.setTo(.5, .5);
@@ -1132,11 +1021,7 @@
                     level.deadGroup.push(this);
                 }, explosionSprite);
 
-                if (explosion.hide) {
-                    game.world.addAt(explosionSprite, 1);
-                } else {
-                    game.world.add(explosionSprite);
-                }
+                game.world.addAt(explosionSprite, 1);
 
                 explosionSprite.play("explode", 17, false);
                 AudioPlayer.playBombSound();
@@ -1147,7 +1032,7 @@
 
         /***/
     },
-    /* 14 */
+    /* 13 */
     /***/ function (module, exports, __webpack_require__) {
 
         var remotePlayerUpdateInterval = 100;
@@ -1160,10 +1045,8 @@
             this.spawnPoint = {x: x, y: y};
             Phaser.Sprite.call(this, game, x, y, "bomberman_" + color);
             game.physics.enable(this, Phaser.Physics.ARCADE);
-
             this.anchor.setTo(0.1, 0.6);
             this.body.setSize(20, 19, 5, 16);
-
             this.animations.add('up', [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
             this.animations.add('down', [8, 9, 10, 11, 12, 13, 14, 15], 15, true);
             this.animations.add('right', [16, 17, 18, 19, 20, 21, 22, 23], 15, true);
@@ -1180,10 +1063,8 @@
                     var fractionOfTimeStep = (game.time.now - lastFrameTime) / remotePlayerUpdateInterval;
                     var distanceCoveredThisFrameX = fractionOfTimeStep * this.distanceToCover.x;
                     var distanceCoveredThisFrameY = fractionOfTimeStep * this.distanceToCover.y;
-
                     this.distanceCovered.x += Math.abs(distanceCoveredThisFrameX);
                     this.distanceCovered.y += Math.abs(distanceCoveredThisFrameY);
-                    console.log(this.position.x + "||" + this.position.y);
                     this.position.x += distanceCoveredThisFrameX;
                     this.position.y += distanceCoveredThisFrameY;
                 } else {
@@ -1212,22 +1093,18 @@
 
         /***/
     },
-    /* 15 */
+    /* 14 */
     /***/ function (module, exports, __webpack_require__) {
 
-        var TextConfigurer = __webpack_require__(7);
+        var TextConfigurer = __webpack_require__(3);
 
 	var screenWidth = game.width;
-
         var xOffset = 230 - screenWidth;
         var yOffset = 20;
-
         var headerXOffset = 280 - screenWidth;
         var headerYOffset = 25;
-
         var winnerPicXOffset = 360 - screenWidth;
         var winnerPicYOffset = 270;
-
         var defaultTextXOffset = 350 - screenWidth;
         var defaultTextYOffset = 180;
 
@@ -1236,19 +1113,14 @@
 
 	function RoundEndAnimation(game, roundNumber, winningColors) {
 		Phaser.Group.call(this, game);
-
 		var roundEndWindow = game.add.image(xOffset, yOffset, "round_end_display");
-
 		var header = game.add.text(headerXOffset, headerYOffset, "Round " + roundNumber + " Complete!")
 		TextConfigurer.configureText(header, "white", 32);
-
 		var actualTextXOffset = winningColors.length > 1 ? defaultTextXOffset - 55 : defaultTextXOffset;
 		var actualTextToDisplay = winningColors.length > 1 ? roundEndTieText : singleWinnerText;
-
 		var textObject = game.add.text(actualTextXOffset, defaultTextYOffset, actualTextToDisplay);
 		TextConfigurer.configureText(textObject, "white", 28);
 		textObject.alpha = 0;
-
 		this.add(roundEndWindow);
 		this.add(header);
 		this.add(textObject);
@@ -1260,7 +1132,7 @@
 
 	RoundEndAnimation.prototype.createAndAddWinnerImages = function(winningColors) {
 		this.winnerImageIndices = [];
-		var index = 3; // 3 is the index of the first winner image.
+        var index = 3;
 
 		winningColors.forEach(function(color) {
 			var winnerPicImage = new Phaser.Image(game, winnerPicXOffset, winnerPicYOffset, "bomberman_head_" + color);
@@ -1327,10 +1199,10 @@
 	module.exports = RoundEndAnimation;
 
 /***/ },
-    /* 16 */
+    /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-        var PowerupIDs = __webpack_require__(10);
+        var PowerupIDs = __webpack_require__(9);
 
 	var powerupImageKeys = {};
 
@@ -1341,10 +1213,10 @@
 	module.exports = powerupImageKeys;
 
 /***/ },
-    /* 17 */
+    /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-        var PowerupIds = __webpack_require__(10);
+        var PowerupIds = __webpack_require__(9);
 
 	var notificationImageMap = {};
 	notificationImageMap[PowerupIds.BOMB_STRENGTH] = "bomb_strength_notification";
@@ -1370,10 +1242,10 @@
 
         /***/
     },
-    /* 18 */
+    /* 17 */
     /***/ function (module, exports, __webpack_require__) {
 
-        var TextConfigurer = __webpack_require__(7);
+        var TextConfigurer = __webpack_require__(3);
 
         function GameOver() {
         }

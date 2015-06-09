@@ -1,12 +1,13 @@
 var DEFAULT_NUM_ROUNDS = 3;
 
-var Game = function() {
+var Game = function (id) {
+    this.id = id;
 	this.players = {};
 	this.map = {};
 	this.bombs = {};
 	this.numPlayersAlive = 0;
-	this.roundReadyAcknowledgements = [];
-	this.awaitingAcknowledgements = false;
+    this.readyRound = [];
+    this.awaiting = false;
 	this.numRounds = DEFAULT_NUM_ROUNDS;
 	this.currentRound = 1;
 };
@@ -16,13 +17,13 @@ Game.prototype = {
 		return Object.keys(this.players).length;
 	},
 
-	get numRoundReadinessAcknowledgements() {
-		return this.roundReadyAcknowledgements.length;
+    get numPlayersReadyRound() {
+        return this.readyRound.length;
 	},
 
-	acknowledgeRoundReadinessForPlayer: function(playerId) {
-		if(this.roundReadyAcknowledgements.indexOf(playerId) == -1) {
-			this.roundReadyAcknowledgements.push(playerId);
+    addPlayerReadyRound: function (playerId) {
+        if (this.readyRound.indexOf(playerId) == -1) {
+            this.readyRound.push(playerId);
 		}
 	},
 
@@ -65,7 +66,7 @@ Game.prototype = {
 	resetForNewRound: function() {
 		this.clearBombs();
 		this.resetPlayers();
-		this.roundReadyAcknowledgements = [];
+        this.readyRound = [];
 		this.numPlayersAlive = Object.keys(this.players).length;
 	}
 };

@@ -59,43 +59,41 @@ function onClientDisconnect() {
         return;
     }
     var lobbySlots = Lobby.getLobbySlots();
-    if (lobbySlots[this.gameId].state == "joinable" || lobbySlots[this.gameId].state == "full") {
+    if (lobbySlots.state == "joinable" || lobbySlots.state == "full") {
         Lobby.onLeavePendingGame.call(this);
-    } else if (lobbySlots[this.gameId].state == "settingup") {
-        lobbySlots[this.gameId].state = "empty";
+    } else if (lobbySlots.state == "settingup") {
+        lobbySlots.state = "empty";
         Lobby.broadcastSlotStateUpdate(this.gameId, "empty");
-    } else if(lobbySlots[this.gameId].state == "inprogress") {
-        var game = games[this.gameId];
-        if(this.id in game.players) {
-            console.log("deleting " + this.id);
-            delete game.players[this.id];
+    } else if (lobbySlots.state == "inprogress") {
+        if (this.id in games.players) {
+            delete games.players[this.id];
             socket.sockets.in(this.gameId).emit("remove player", {id: this.id});
         }
-        if(game.numPlayers < 2) {
-            if(game.numPlayers == 1) {
+        if (games.numPlayers < 2) {
+            if (games.numPlayers == 1) {
                 socket.sockets.in(this.gameId).emit("no opponents left");
             }
             terminateExistingGame(this.gameId);
         }
-        if(game.awaitingAcknowledgements && game.numEndOfRoundAcknowledgements >= game.numPlayers) {
-            game.awaitingAcknowledgements = false;
+        if (games.awaiting && games.numEndOfRoundAcknowledgements >= games.numPlayers) {
+            games.awaiting = false;
         }
     }
 };
 
 function terminateExistingGame(gameId) {
-    games[gameId].clearBombs();
-    delete games[gameId];
-    Lobby.getLobbySlots()[gameId] = new PendingGame();
+    games.clearBombs();
+    delete games;
+    Lobby.restartLobby();
     Lobby.broadcastSlotStateUpdate(gameId, "empty");
 };
 
 function onStartGame() {
     var lobbySlots = Lobby.getLobbySlots();
-    var game = new Game();
-    games[this.gameId] = game;
-    var pendingGame = lobbySlots[this.gameId];
-    lobbySlots[this.gameId].state = "inprogress";
+    var game = new Game(this.gameId);
+    games = game;
+    var pendingGame = lobbySlots;
+    lobbySlots.state = "inprogress";
     Lobby.broadcastSlotStateUpdate(this.gameId, "inprogress");
     var ids = pendingGame.getPlayerIds();
     for(var i = 0; i < ids.length; i++) {
@@ -103,23 +101,21 @@ function onStartGame() {
         var spawnPoint = MapInfo['First'].spawnLocations[i];
         var newPlayer = new Player(spawnPoint.x * TILE_SIZE, spawnPoint.y * TILE_SIZE, "down", playerId, pendingGame.players[playerId].color);
         newPlayer.spawnPoint = spawnPoint;
-
-        game.players[playerId] = newPlayer;
+        games.players[playerId] = newPlayer;
     }
-    game.numPlayersAlive = ids.length;
-    socket.sockets.in(this.gameId).emit("start game on client", {mapName: pendingGame.mapName, players: game.players});
+    games.numPlayersAlive = ids.length;
+    socket.sockets.in(this.gameId).emit("start game on client", {mapName: pendingGame.mapName, players: games.players});
 };
 
 function onRegisterMap(data) {
-    games[this.gameId].map = new Map(data, TILE_SIZE);
+    games.map = new Map(data, TILE_SIZE);
 };
 
 function onMovePlayer(data) {
-    var game = games[this.gameId];
-    if(game === undefined || game.awaitingAcknowledgements) {
+    if (games === undefined || games.awaiting) {
         return;
     }
-    var movingPlayer = game.players[this.id];
+    var movingPlayer = games.players[this.id];
     if(!movingPlayer) {
         return;
     }
@@ -129,40 +125,39 @@ function onMovePlayer(data) {
 };
 
 function onPlaceBomb(data) {
-    var game = games[this.gameId];
-    var player = game.players[this.id];
-    if(game === undefined || game.awaitingAcknowledgements || player.numBombsAlive >= player.bombCapacity) {
+    var player = games.players[this.id];
+    if (games === undefined || games.awaiting || player.numBombsAlive >= player.bombCapacity) {
         return;
     }
     var gameId = this.gameId;
     var bombId = data.id;
-    var normalizedBombLocation = game.map.placeBombOnGrid(data.x, data.y);
+    var normalizedBombLocation = games.map.placeBombOnGrid(data.x, data.y);
     if(normalizedBombLocation == -1) {
         return;
     }
     player.numBombsAlive++;
     var bombTimeoutId = setTimeout(function() {
-        var explosionData = bomb.detonate(game.map, player.bombStrength, game.players);
+        var explosionData = bomb.detonate(games.map, player.bombStrength, games.players);
         player.numBombsAlive--;
         socket.sockets.in(gameId).emit("detonate", {explosions: explosionData.explosions, id: bombId,
             destroyedTiles: explosionData.destroyedBlocks});
-        delete game.bombs[bombId];
-        game.map.removeBombFromGrid(data.x, data.y);
+        delete games.bombs[bombId];
+        games.map.removeBombFromGrid(data.x, data.y);
 
         handlePlayerDeath(explosionData.killedPlayers, gameId);
     }, 2000);
     var bomb = new Bomb(normalizedBombLocation.x, normalizedBombLocation.y, bombTimeoutId);
-    game.bombs[bombId] = bomb;
+    games.bombs[bombId] = bomb;
     socket.sockets.to(this.gameId).emit("place bomb", {x: normalizedBombLocation.x, y: normalizedBombLocation.y, id: data.id});
 };
 
 function onPowerupOverlap(data) {
-    var powerup = games[this.gameId].map.claimPowerup(data.x, data.y);
+    var powerup = games.map.claimPowerup(data.x, data.y);
 
     if(!powerup) {
         return;
     }
-    var player = games[this.gameId].players[this.id];
+    var player = games.players[this.id];
     if(powerup.powerupType === PowerupIDs.BOMB_STRENGTH) {
         player.bombStrength++;
     } else if(powerup.powerupType === PowerupIDs.BOMB_CAPACITY) {
@@ -173,70 +168,72 @@ function onPowerupOverlap(data) {
 
 function handlePlayerDeath(deadPlayerIds, gameId) {
     var tiedWinnerIds;
-    if(deadPlayerIds.length > 1 && games[gameId].numPlayersAlive - deadPlayerIds.length == 0) {
+    if (deadPlayerIds.length > 1 && games.numPlayersAlive - deadPlayerIds.length == 0) {
         tiedWinnerIds = deadPlayerIds;
     }
     deadPlayerIds.forEach(function(deadPlayerId) {
-        games[gameId].players[deadPlayerId].alive = false;
+        games.players[deadPlayerId].alive = false;
         socket.sockets.in(gameId).emit("kill player", {id: deadPlayerId});
-        games[gameId].numPlayersAlive--;
+        games.numPlayersAlive--;
     }, this);
 
-    if(games[gameId].numPlayersAlive <= 1) {
+    if (games.numPlayersAlive <= 1) {
         endRound(gameId, tiedWinnerIds);
     }
 };
 
 function endRound(gameId, tiedWinnerIds) {
     var roundWinnerColors = [];
-    var game = games[gameId];
     if(tiedWinnerIds) {
         tiedWinnerIds.forEach(function(tiedWinnerId) {
-            roundWinnerColors.push(game.players[tiedWinnerId].color);
+            roundWinnerColors.push(games.players[tiedWinnerId].color);
         });
     } else {
-        var winner = game.calculateRoundWinner();
+        var winner = games.calculateRoundWinner();
         winner.wins++;
         roundWinnerColors.push(winner.color);
     }
-    game.currentRound++;
-    if(game.currentRound > 2) {
-        var gameWinners = game.calculateGameWinners();
+    games.currentRound++;
+    if (games.currentRound > 2) {
+        var gameWinners = games.calculateGameWinners();
 
-        if(gameWinners.length == 1 && (game.currentRound > 3 || gameWinners[0].wins == 2)) {
-            socket.sockets.in(gameId).emit("end game", {completedRoundNumber: game.currentRound - 1, roundWinnerColors: roundWinnerColors,
+        if (gameWinners.length == 1 && (games.currentRound > 3 || gameWinners[0].wins == 2)) {
+            socket.sockets.in(gameId).emit("end game", {
+                completedRoundNumber: games.currentRound - 1, roundWinnerColors: roundWinnerColors,
                 gameWinnerColor: gameWinners[0].color});
             terminateExistingGame(gameId);
             return;
         }
     }
-    game.awaitingAcknowledgements = true;
-    game.resetForNewRound();
-    socket.sockets.in(gameId).emit("new round", {completedRoundNumber: game.currentRound - 1, roundWinnerColors: roundWinnerColors});
+    games.awaiting = true;
+    games.resetForNewRound();
+    socket.sockets.in(gameId).emit("new round", {
+        completedRoundNumber: games.currentRound - 1,
+        roundWinnerColors: roundWinnerColors
+    });
 };
 
 function onReadyForRound() {
-    var game = games[this.gameId];
-
-    if(!game.awaitingAcknowledgements) {
+    if (!games.awaiting) {
         return;
     }
-
-    game.acknowledgeRoundReadinessForPlayer(this.id);
-
-    if(game.numRoundReadinessAcknowledgements >= game.numPlayers) {
-        game.awaitingAcknowledgements = false;
+    games.addPlayerReadyRound(this.id);
+    if (games.numPlayersReadyRound >= games.numPlayers) {
+        games.awaiting = false;
     }
 };
 
 function broadcastingLoop() {
-    for(var g in games) {
-        var game = games[g];
-        for(var i in game.players) {
-            var player = game.players[i];
-            if(player.alive) {
-                socket.sockets.in(g).emit("move player", {id: player.id, x: player.x, y: player.y, facing: player.facing, timestamp: (+new Date())});
-            }
+    for (var i in games.players) {
+        var player = games.players[i];
+        if (player.alive) {
+            socket.sockets.in(games.id).emit("move player", {
+                id: player.id,
+                x: player.x,
+                y: player.y,
+                facing: player.facing,
+                timestamp: (+new Date())
+            });
         }
     }
 };
